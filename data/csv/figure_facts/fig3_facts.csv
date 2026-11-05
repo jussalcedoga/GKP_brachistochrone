@@ -1,0 +1,13 @@
+key,value
+flip_geodesic.F_plus,1.0
+flip_geodesic.f,0.5
+flip_geodesic.nbar,2.442261736829928
+flip_photon.F_plus,0.5412642083239044
+flip_photon.f,0.3775
+flip_photon.nbar,2.764619600844917e-05
+gkp_geodesic.F_plus,0.6030036639914491
+gkp_geodesic.f,0.5
+gkp_geodesic.nbar,0.7018975800328817
+gkp_photon.F_plus,0.5240032507118171
+gkp_photon.f,0.5
+gkp_photon.nbar,0.5113745649806497

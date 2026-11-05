@@ -1,0 +1,89 @@
+{
+ "description": "Closed-evolution traces of the target-only GKP pulses at 412 ns (Letter Table I) for Supplementary Fig. S26\n(agent figures, Nov 1).  No optimization: the pulses are read from results/pulses/capability_pulses.jsonl.\n\nFor every start (CS, ECD, SNAP chi_d = g, SNAP chi_d = 4 g; seeds 1000-1007) the stored slice variables X are mapped to\ncontrols by the model of sims/capability_noisy.py (model(gk, 90), cutoff 90), checked against the stored Cartesian\ncontrols C, and propagated from |0>|g> with the exact slice unitaries at 8 points per slice, as in sims/pulses_stats.py\n(closed_traces, diag): oscillator purity Tr rho^2 (equal to the qubit purity, the joint state is pure), excited-qubit\npopulation P_e and <n>.  Check: the final closed F_T against the stored F90_closed.  Representative start of each gate\nset: the start whose Lindblad fidelity F90_noisy is closest to the mean over the 8 starts (ties: lowest seed).\nWrites results/pulses/closed_target_<gk>_T412.npz (t_ns, seed, F90_noisy, F90_closed, representative, X, C, purity,\nPe, nbar) and results/pulses/closed_target_check.json.\n  OMP_NUM_THREADS=1 bash manuscript_figures/tools/py.sh manuscript_figures/sims/pulses_closed_target.py\n",
+ "cases": {
+  "cs": {
+   "max_dev_C_per_us": 0.0,
+   "max_dev_F_T_closed": 3.5416114485542494e-14,
+   "rep_seed": 1000,
+   "rep_F90_noisy": 0.9975522773715386,
+   "F90_noisy_mean": 0.997560312218343,
+   "F90_noisy_sd": 0.00015072914937693457,
+   "purity_min_slice_ends": {
+    "mean": 0.663953876253275,
+    "sd": 0.015334982807518667,
+    "rep": 0.6605669632214246
+   },
+   "purity_final": {
+    "mean": 0.999919459135235,
+    "sd": 5.7856428595881363e-05
+   },
+   "nbar_max": {
+    "mean": 2.4795277370456685,
+    "sd": 0.04587265901652948
+   }
+  },
+  "cd": {
+   "max_dev_C_per_us": 0.0,
+   "max_dev_F_T_closed": 2.653433028854124e-14,
+   "rep_seed": 1001,
+   "rep_F90_noisy": 0.7984713941209354,
+   "F90_noisy_mean": 0.7969880367478535,
+   "F90_noisy_sd": 0.015376733616886382,
+   "purity_min_slice_ends": {
+    "mean": 0.5878235558971139,
+    "sd": 0.04320740146097523,
+    "rep": 0.6046190808279257
+   },
+   "purity_final": {
+    "mean": 0.9841615093334395,
+    "sd": 0.006225438101789763
+   },
+   "nbar_max": {
+    "mean": 0.7648174246232238,
+    "sd": 0.05566437659484877
+   }
+  },
+  "snap": {
+   "max_dev_C_per_us": 0.0,
+   "max_dev_F_T_closed": 2.2426505097428162e-14,
+   "rep_seed": 1003,
+   "rep_F90_noisy": 0.6268201943893843,
+   "F90_noisy_mean": 0.6287779696761732,
+   "F90_noisy_sd": 0.009285312964446773,
+   "purity_min_slice_ends": {
+    "mean": 0.8182688179862083,
+    "sd": 0.02331656212603109,
+    "rep": 0.8241939097518435
+   },
+   "purity_final": {
+    "mean": 0.9744810216656883,
+    "sd": 0.003140137982881061
+   },
+   "nbar_max": {
+    "mean": 0.7887993044477409,
+    "sd": 0.09269693764635183
+   }
+  },
+  "snap4": {
+   "max_dev_C_per_us": 0.0,
+   "max_dev_F_T_closed": 3.552713678800501e-14,
+   "rep_seed": 1006,
+   "rep_F90_noisy": 0.8383473793056693,
+   "F90_noisy_mean": 0.8388901956325818,
+   "F90_noisy_sd": 0.023099715168715756,
+   "purity_min_slice_ends": {
+    "mean": 0.5388686445321954,
+    "sd": 0.010913613994908079,
+    "rep": 0.5259363398641028
+   },
+   "purity_final": {
+    "mean": 0.9697702769637604,
+    "sd": 0.01679319893490674
+   },
+   "nbar_max": {
+    "mean": 1.0045269467696554,
+    "sd": 0.11057824038018788
+   }
+  }
+ }
+}

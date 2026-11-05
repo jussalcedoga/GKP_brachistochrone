@@ -1,0 +1,137 @@
+{
+ "description": "Independent check of every pulse drawn in Supplementary Figs. S25-S27 (agent figures, Nov 2).  No optimization.\n\nFor each drawn run the slice variables X are read from the ORIGINAL result files (manuscript/.../jobs80/<job_id>.json for\nthe Fig. 4 tracking runs, sims/results/flip_gate.jsonl for the flip, sims/results/pulses/capability_pulses.jsonl for the\ntarget-only runs of Table I, whose fidelities are compared with sims/results/capability_noisy.jsonl) and compared with\nthe arrays that the figures draw (results/pulses/*.npz).  The joint Hamiltonian is then rebuilt from Letter Eq. (7) with\noperators written here (not the models of common/), Omega = 10 g r e^{i f_Omega}, branch amplitude g a_j e^{i f_j}\n(SNAP: cavity drive g a_g e^{i f_g}, dispersive term -chi_d |e><e| (x) n), and propagated in closed evolution with\nscipy.linalg.expm at 8 points per slice (cutoff 90).  The oscillator purity Tr rho^2 is computed from the reduced\noscillator density matrix (the figures use the qubit Gram matrix) and compared with the drawn curves, and the final\nfidelity with the stored closed value.  Also checked: |u_+-| <= g, the identity\nsum_j |j><j| (x) G(u_j) = 1 (x) G(u_+) + sigma_z (x) G(u_-) on the drawn controls, and, for SNAP, u_- = 0.\nWrites results/pulses/pulses_fig_check.json.\n  OMP_NUM_THREADS=1 bash manuscript_figures/tools/py.sh manuscript_figures/sims/pulses_fig_check.py\n",
+ "cases": {
+  "S25_cs": {
+   "seed": 16,
+   "job": "seed_gkp_geodesic_cs_k2_s16",
+   "dX_raw": 0.0,
+   "d_drawn": 2.2887833992611187e-16,
+   "d_purity": 2.9790080291469678e-08,
+   "d_FT_closed": 4.3298697960381105e-15,
+   "max_abs_u_plus": 0.7298017693882028,
+   "max_abs_u_minus": 0.9988101981172122,
+   "max_abs_u_plus_or_minus_sum": 1.413460585902587,
+   "identity_dev": 1.464821375527116e-14
+  },
+  "S25_cd": {
+   "seed": 18,
+   "job": "seed_gkp_geodesic_cd_k2_s18",
+   "dX_raw": 0.0,
+   "d_drawn": 1.2412670766236366e-16,
+   "d_purity": 2.9717828420317005e-08,
+   "d_FT_closed": 1.8918200339612667e-13,
+   "max_abs_u_plus": 0.511232028539208,
+   "max_abs_u_minus": 0.9999997489544742,
+   "max_abs_u_plus_or_minus_sum": 1.3562407785516337,
+   "identity_dev": 1.9860273225978185e-15
+  },
+  "S25_snap": {
+   "seed": 5,
+   "job": "seed_gkp_geodesic_snap_k2_s5",
+   "dX_raw": 0.0,
+   "d_drawn": 2.220446049250313e-16,
+   "d_purity": 2.978635416095443e-08,
+   "d_FT_closed": 4.9182879990894435e-14,
+   "max_abs_u_plus": 1.0,
+   "u_minus": 0.0
+  },
+  "S27_cs_rep": {
+   "seed": 3005,
+   "dX_raw": 0.0,
+   "d_drawn": 1.2412670766236366e-16,
+   "d_purity": 2.9793165268188204e-08,
+   "d_score_vs_jsonl": 0.0,
+   "max_abs_u_plus": 0.9149424094275441,
+   "max_abs_u_minus": 0.9981887622673556,
+   "max_abs_u_plus_or_minus_sum": 1.3926212973472705,
+   "identity_dev": 1.464821375527116e-14
+  },
+  "S27_cd_rep": {
+   "seed": 3006,
+   "dX_raw": 0.0,
+   "d_drawn": 2.482534153247273e-16,
+   "d_purity": 2.9787098565492443e-08,
+   "d_score_vs_jsonl": 0.0,
+   "max_abs_u_plus": 0.9485275826532228,
+   "max_abs_u_minus": 0.4905428745911095,
+   "max_abs_u_plus_or_minus_sum": 1.0615901968762047,
+   "identity_dev": 1.5100665727558131e-15
+  },
+  "S27_cd_best": {
+   "seed": 3002,
+   "dX_raw": 0.0,
+   "d_drawn": 1.2412670766236366e-16,
+   "d_purity": 2.9780347965413512e-08,
+   "d_score_vs_jsonl": 0.0,
+   "max_abs_u_plus": 0.5000000000000001,
+   "max_abs_u_minus": 0.9996695549076567,
+   "max_abs_u_plus_or_minus_sum": 1.362379402685862,
+   "identity_dev": 2.664616573022579e-15
+  },
+  "S27_snap_rep": {
+   "seed": 3005,
+   "dX_raw": 0.0,
+   "d_drawn": 1.2412670766236366e-16,
+   "d_purity": 2.9798017719961933e-08,
+   "d_score_vs_jsonl": 0.0,
+   "max_abs_u_plus": 1.0,
+   "u_minus": 0.0
+  },
+  "S26_cs": {
+   "seed": 1000,
+   "chi_d_over_g": 1.0,
+   "dX": 0.0,
+   "d_purity": 6.794564910705958e-14,
+   "d_FT_closed": 1.0103029524088925e-14,
+   "n_orig_rows": 1,
+   "d_F90_noisy_vs_capability_noisy": 0.0,
+   "max_abs_u_plus": 0.6460630585628085,
+   "max_abs_u_minus": 0.9999939548898371,
+   "max_abs_u_plus_or_minus_sum": 1.409347097673066,
+   "identity_dev": 1.464821375527116e-14
+  },
+  "S26_cd": {
+   "seed": 1001,
+   "chi_d_over_g": 1.0,
+   "dX": 0.0,
+   "d_purity": 7.760458942129844e-14,
+   "d_FT_closed": 2.6978419498391304e-14,
+   "n_orig_rows": 1,
+   "d_F90_noisy_vs_capability_noisy": 0.0,
+   "max_abs_u_plus": 0.5000000000000001,
+   "max_abs_u_minus": 0.9999999879515356,
+   "max_abs_u_plus_or_minus_sum": 1.04831953811196,
+   "identity_dev": 1.9860273225978185e-15
+  },
+  "S26_snap": {
+   "seed": 1003,
+   "chi_d_over_g": 1.0,
+   "dX": 0.0,
+   "d_purity": 9.747758156208874e-14,
+   "d_FT_closed": 1.4654943925052066e-14,
+   "n_orig_rows": 1,
+   "d_F90_noisy_vs_capability_noisy": 0.0,
+   "max_abs_u_plus": 1.0,
+   "u_minus": 0.0
+  },
+  "S26_snap4": {
+   "seed": 1006,
+   "chi_d_over_g": 4.0,
+   "dX": 0.0,
+   "d_purity": 6.983302824892235e-14,
+   "d_FT_closed": 7.549516567451064e-15,
+   "n_orig_rows": 1,
+   "d_F90_noisy_vs_capability_noisy": 0.0,
+   "max_abs_u_plus": 1.0,
+   "u_minus": 0.0
+  }
+ },
+ "worst": {
+  "dX": 0.0,
+  "d_drawn": 2.482534153247273e-16,
+  "d_purity": 2.9798017719961933e-08,
+  "d_FT_closed": 1.8918200339612667e-13,
+  "identity_dev": 1.464821375527116e-14,
+  "max_abs_u": 1.0
+ }
+}

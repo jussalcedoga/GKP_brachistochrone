@@ -1,0 +1,109 @@
+% Supplementary Tables 2, 7, 8, 9, 11, 13 and 15 as printed (the tabular blocks only, not the manuscript). Parsed
+% by tables/si_tables_2_7_8_9_13.py, tables/target_only_preparation.py, figures/SFig15_pulses_tracking/plot.py,
+% figures/SFig16_pulses_target/plot.py, figures/SFig17_pulses_flip/plot.py and simulations/gate_sets/pulses_*_B.py
+% to check that the stored data reproduce the printed digits.
+% Supplementary Table 2
+\label{tab:vacuum}
+\begin{ruledtabular}
+\begin{tabular}{lcccccc}
+ & $J_{\rm geo}$ & optimum & sum & closed form & one-mode & bound\\\hline
+preparation of $\ket{0_L}$ & 122.7 & 112.6 & -- & 112.7 & 114.3 & 111.3\\
+preparation of $\ket{1_L}$ & 287.7 & 246.6 & -- & 246.9 & 253.1 & 238.3\\
+$\ket{0_L}\to\ket{1_L}$, $\Delta=0.4$ & 739.5 & 359.2 & 359.2 & 359.6 & 367.4 & 345.6\\
+$\ket{0_L}\to\ket{1_L}$, $\Delta=0.3$ & 1498.7 & 722.0 & 722.0 & 725.8 & 763.0 & --\\
+$\ket{0_L}\to\ket{+_L}$ & 349.7 & 225.8 & 225.8 & 226.0 & 229.2 & --\\
+cat $\gamma=2\to\ket{0_L}$ & 799.2 & 536.5 & 536.5 & 536.8 & 543.5 & --\\
+\end{tabular}
+
+% Supplementary Table 7
+\label{tab:stab}
+\begin{ruledtabular}
+\begin{tabular}{lccccc}
+ & $F_T$ & $\langle S_X\rangle$ & $\langle S_Z\rangle$ & $\langle D(\beta)\rangle$ & $\bar n$\\\hline
+target $\ket{0_L}$ & 1 & 0.589 & 0.606 & 0.882 & 2.44\\
+vacuum & 0.544 & 0.043 & 0.043 & 0.456 & 0\\\hline
+CS, 412~ns & 0.990 & $0.516(4)$ & $0.587(4)$ & $0.872(1)$ & 2.01\\
+CS, 824~ns & 0.990 & $0.527(5)$ & $0.590(4)$ & $0.873(2)$ & 2.10\\
+CS, 2133~ns & 0.986 & $0.550(6)$ & $0.590(3)$ & $0.872(2)$ & 2.32\\
+CD, 412~ns & 0.807 & $0.163(30)$ & $0.376(9)$ & $0.763(8)$ & 0.78\\
+CD, 824~ns & 0.979 & $0.521(8)$ & $0.527(11)$ & $0.851(5)$ & 1.99\\
+CD, 2133~ns & 0.984 & $0.532(4)$ & $0.581(3)$ & $0.871(1)$ & 2.16\\
+SNAP, 412~ns & 0.576 & $0.041(4)$ & $0.086(60)$ & $0.513(80)$ & 0.08\\
+SNAP, 824~ns & 0.834 & $0.317(102)$ & $0.359(110)$ & $0.735(96)$ & 1.19\\
+SNAP, 2133~ns & 0.979 & $0.522(2)$ & $0.541(5)$ & $0.853(2)$ & 1.97\\
+\end{tabular}
+
+% Supplementary Table 8
+\label{tab:resources}
+\begin{ruledtabular}
+\begin{tabular}{lccccc}
+pulse & $\overline{\Delta H}/\omega$ & $\max\Delta H/\omega$ & $\max\bar n$ & $\overline{\bar n}$ & $P_{n\geq70}$\\\hline
+CS, GKP, 412~ns & 2.33 & 4.18 & 2.03 & 1.09 & $1\times10^{-5}$\\
+CD, GKP, 412~ns & 1.20 & 1.97 & 0.76 & 0.39 & $<10^{-8}$\\
+SNAP, GKP, 412~ns$^a$ & 1.46 & 2.22 & 0.80 & 0.41 & $<10^{-8}$\\
+CS, GKP, 824~ns & 1.90 & 3.56 & 2.16 & 1.16 & $4\times10^{-5}$\\
+CD, GKP, 824~ns & 1.59 & 2.35 & 2.06 & 1.01 & $<10^{-8}$\\
+SNAP, GKP, 824~ns & 2.23 & 4.26 & 2.48 & 1.55 & $<10^{-8}$\\
+CS, transfer, 824~ns & 3.70 & 6.43 & 3.34 & 2.74 & $8\times10^{-4}$\\
+CD, transfer, 824~ns & 1.76 & 2.65 & 2.90 & 2.57 & $6\times10^{-7}$\\
+SNAP, transfer, 824~ns & 4.44 & 6.01 & 3.14 & 2.79 & $10^{-8}$\\
+\end{tabular}
+
+% Supplementary Table 9
+\label{tab:proposal}
+\begin{ruledtabular}
+\begin{tabular}{lcccc}
+pulses & closed & echo & Ramsey & proposal\\\hline
+GKP, CS, 412~ns & 0.9926(3) & 0.9903(2) & 0.9892(2) & 0.9805(5)\\
+GKP, CS, 824~ns & 0.9952(3) & 0.9901(2) & 0.9881(2) & 0.9725(11)\\
+GKP, CS, 2133~ns & 0.9986(3) & 0.9857(6) & 0.9805(7) & 0.9407(33)\\
+GKP, CD, 412~ns & 0.808(9) & 0.807(9) & 0.806(9) & 0.797(9)\\
+GKP, CD, 824~ns & 0.984(3) & 0.979(3) & 0.976(3) & 0.951(4)\\
+GKP, CD, 2133~ns & 0.9970(3) & 0.9841(10) & 0.9776(13) & 0.928(4)\\
+GKP, SNAP, 412~ns & 0.576(45) & 0.576(45) & 0.576(45) & 0.575(43)\\
+GKP, SNAP, 824~ns & 0.84(10) & 0.83(10) & 0.83(10) & 0.81(9)\\
+GKP, SNAP, 2133~ns & 0.9919(8) & 0.9787(12) & 0.9709(10) & 0.9135(20)\\
+transfer, CS, 824~ns & 0.992(4) & 0.984(4) & 0.980(4) & 0.955(4)\\
+transfer, CD, 824~ns & 0.9966(5) & 0.9890(8) & 0.9865(13) & 0.964(6)\\
+transfer, SNAP, 824~ns & 0.92(2) & 0.91(2) & 0.91(2) & 0.89(2)\\
+\end{tabular}
+
+% Supplementary Table 11
+\label{tab:gate2}
+\begin{ruledtabular}
+\begin{tabular}{lccc}
+ & CS & CD & SNAP\\\hline
+gate only, 412~ns & $0.945\pm0.040$ [0.982] & $0.709\pm0.182$ [0.777] & $0.692\pm0.016$ [0.707]\\
+gate only, 824~ns & $0.986\pm0.003$ [0.989] & $0.789\pm0.084$ [0.991] & $0.744\pm0.059$ [0.806]\\
+tracking, 824~ns, $W=10$ & $0.963\pm0.010$ [0.975] & $0.778\pm0.086$ [0.983] & $0.664\pm0.008$ [0.684]\\
+tracking, 824~ns, $W=70$ & $0.954\pm0.009$ [0.963] & $0.892\pm0.115$ [0.985] & $0.645\pm0.056$ [0.684]\\
+$C_{\min}$, 824~ns, $W=70$ & 0.31 & 0.11 & 0.04\\
+\end{tabular}
+
+% Supplementary Table 13
+\label{tab:gate}
+\begin{ruledtabular}
+\begin{tabular}{llccc}
+path & gate set & $\ket{0_L}\to\ket{1_L}$ & $\ket{1_L}\to\ket{0_L}$ & gate fidelity\\\hline
+brachistochrone & CS & 0.984(4) & 0.12(5) & 0.45(4) [0.57]\\
+ & CD & 0.989(1) & 0.981(2) & 0.985(1) [0.987]\\
+ & SNAP & 0.914(23) & 0.24(13) & 0.52(8) [0.63]\\
+trade-off & CS & 0.987(2) & 0.13(8) & 0.47(7) [0.59]\\
+ & CD & 0.912(105) & 0.70(15) & 0.79(9) [0.93]\\
+ & SNAP & 0.959(13) & 0.24(9) & 0.53(6) [0.62]\\
+photon optimal & CS & 0.987(2) & 0.09(6) & 0.43(4) [0.53]\\
+ & CD & 0.985 & 0.64(21) & 0.79(13) [0.93]\\
+ & SNAP & 0.968(6) & 0.24(7) & 0.54(6) [0.66]\\\hline
+$H_{\rm opt}$, 824~ns & & 0.993 & 0.993 & 0.993\\
+\end{tabular}
+
+% Supplementary Table 15
+\label{tab:capability}
+\begin{ruledtabular}
+\begin{tabular}{lcc}
+gate set & 412~ns & 824~ns\\\hline
+CS & 0.9976(2) [0.998] & 0.9949(4) [0.996]\\
+CD & 0.797(15) [0.813] & 0.984(3) [0.988]\\
+SNAP, $\chi_d=g$ & 0.629(9) [0.644] & 0.852(14) [0.868]\\
+SNAP, $\chi_d=4g$ & 0.839(23) [0.876] & 0.987(2) [0.989]\\
+\end{tabular}

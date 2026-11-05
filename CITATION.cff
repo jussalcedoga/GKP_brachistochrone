@@ -1,0 +1,59 @@
+cff-version: 1.2.0
+message: "If you use this code or data, please cite the paper below."
+title: "Time- and photon-optimal paths for the preparation, transfer, and logical flip of Gottesman-Kitaev-Preskill states: code and data"
+type: software
+license: MIT
+version: "1.1.0"
+date-released: "2026-11-05"
+repository-code: "https://github.com/jussalcedoga/GKP_brachistochrone"
+# doi: "10.5281/zenodo.XXXXXXX"
+authors:
+  - family-names: Curtis
+    given-names: Aidan
+    affiliation: "Thayer School of Engineering, Dartmouth College"
+  - family-names: Salcedo-Gallo
+    given-names: Juan S.
+    affiliation: "Thayer School of Engineering, Dartmouth College"
+  - family-names: Limanta
+    given-names: Kevin
+    affiliation: "Thayer School of Engineering, Dartmouth College"
+  - family-names: Leonov
+    given-names: Sergei
+    affiliation: "Thayer School of Engineering, Dartmouth College"
+  - family-names: Chin
+    given-names: Peter
+    affiliation: "Thayer School of Engineering, Dartmouth College"
+  - family-names: Bedkihal
+    given-names: Salil
+    affiliation: "Thayer School of Engineering, Dartmouth College"
+  - family-names: Fitzpatrick
+    given-names: Mattias
+    affiliation: "Thayer School of Engineering, Dartmouth College"
+keywords:
+  - bosonic quantum error correction
+  - GKP code
+  - quantum optimal control
+  - brachistochrone
+  - conditional squeezing
+preferred-citation:
+  type: article
+  title: "Time- and photon-optimal paths for the preparation, transfer, and logical flip of Gottesman-Kitaev-Preskill states"
+  authors:
+    - family-names: Curtis
+      given-names: Aidan
+    - family-names: Salcedo-Gallo
+      given-names: Juan S.
+    - family-names: Limanta
+      given-names: Kevin
+    - family-names: Leonov
+      given-names: Sergei
+    - family-names: Chin
+      given-names: Peter
+    - family-names: Bedkihal
+      given-names: Salil
+    - family-names: Fitzpatrick
+      given-names: Mattias
+  year: 2026
+  # journal: "XXXX"
+  # doi: "XX.XXXX/XXXXX"
+  # url: "https://arxiv.org/abs/XXXX.XXXXX"

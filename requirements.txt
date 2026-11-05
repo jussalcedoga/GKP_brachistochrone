@@ -1,0 +1,17 @@
+# Python 3.12.14 (CPython). Versions are those of the runtime that produced the figures and numbers of the paper.
+# System requirements for the figure text (matplotlib with text.usetex = True): a LaTeX installation with the packages
+# amsmath, amssymb, bm, helvet, sfmath (for example TeX Live 2025: texlive-latex-extra, texlive-fonts-recommended),
+# dvipng and Ghostscript.
+numpy==2.4.4
+scipy==1.17.1
+matplotlib==3.10.9
+mpmath==1.3.0
+pillow==12.2.0
+contourpy==1.3.3
+cycler==0.12.1
+fonttools==4.62.1
+kiwisolver==1.5.0
+packaging==26.2
+pyparsing==3.3.2
+python-dateutil==2.9.0.post0
+six==1.17.0

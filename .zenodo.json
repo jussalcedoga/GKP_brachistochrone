@@ -1,0 +1,18 @@
+{
+  "title": "Time- and photon-optimal paths for the preparation, transfer, and logical flip of Gottesman-Kitaev-Preskill states: code and data",
+  "upload_type": "software",
+  "description": "Code and stored results that reproduce every figure, table and quoted number of the paper, with the simulation scripts, their production command lines, the checks against the published figures and tables, SHA-256 checksums of every data file, and CSV copies of the result tables.",
+  "license": "MIT",
+  "access_right": "open",
+  "creators": [
+    {"name": "Curtis, Aidan", "affiliation": "Thayer School of Engineering, Dartmouth College"},
+    {"name": "Salcedo-Gallo, Juan S.", "affiliation": "Thayer School of Engineering, Dartmouth College"},
+    {"name": "Limanta, Kevin", "affiliation": "Thayer School of Engineering, Dartmouth College"},
+    {"name": "Leonov, Sergei", "affiliation": "Thayer School of Engineering, Dartmouth College"},
+    {"name": "Chin, Peter", "affiliation": "Thayer School of Engineering, Dartmouth College"},
+    {"name": "Bedkihal, Salil", "affiliation": "Thayer School of Engineering, Dartmouth College"},
+    {"name": "Fitzpatrick, Mattias", "affiliation": "Thayer School of Engineering, Dartmouth College"}
+  ],
+  "keywords": ["bosonic quantum error correction", "GKP code", "quantum optimal control", "quantum brachistochrone",
+               "photon-optimal paths", "conditional squeezing", "GRAPE", "Lindblad master equation"]
+}

@@ -1,0 +1,41 @@
+Delta = 100.53 us^-1 = 13.40 g;  K = 2.681 us^-1 = 0.357 g
+disp 412 1004 513s F60=0.9946 closed90=0.9944 noisy90=0.9908
+disp 412 1001 519s F60=0.9893 closed90=0.9893 noisy90=0.9861
+disp 412 1006 525s F60=0.9967 closed90=0.9966 noisy90=0.9932
+disp 412 1002 527s F60=0.9918 closed90=0.9918 noisy90=0.9887
+disp 412 1000 544s F60=0.9915 closed90=0.9915 noisy90=0.9883
+disp 824 1004 547s F60=0.9992 closed90=0.9986 noisy90=0.9896
+disp 412 1007 551s F60=0.9957 closed90=0.9957 noisy90=0.9924
+disp 824 1007 554s F60=0.9962 closed90=0.7731 noisy90=0.7722
+disp 412 1003 555s F60=0.9980 closed90=0.9979 noisy90=0.9946
+disp 824 1003 562s F60=0.9992 closed90=0.9991 noisy90=0.9907
+disp 824 1002 564s F60=0.9989 closed90=0.9984 noisy90=0.9901
+disp 824 1005 566s F60=0.9989 closed90=0.9986 noisy90=0.9906
+disp 824 1001 567s F60=0.9988 closed90=0.9983 noisy90=0.9903
+disp 824 1006 571s F60=0.9990 closed90=0.9989 noisy90=0.9903
+disp 412 1005 580s F60=0.9980 closed90=0.9978 noisy90=0.9944
+disp 824 1000 627s F60=0.9993 closed90=0.9992 noisy90=0.9909
+disp_kerr 824 1001 307s F60=1.0000 closed90=1.0000 noisy90=0.9933
+disp_kerr 824 1006 401s F60=1.0000 closed90=1.0000 noisy90=0.9942
+disp_kerr 824 1002 421s F60=1.0000 closed90=1.0000 noisy90=0.9923
+disp_kerr 824 1003 422s F60=1.0000 closed90=1.0000 noisy90=0.9925
+disp_kerr 824 1004 437s F60=1.0000 closed90=1.0000 noisy90=0.9958
+disp_kerr 412 1002 528s F60=0.9945 closed90=0.9945 noisy90=0.9918
+disp_kerr 412 1003 560s F60=0.9997 closed90=0.9997 noisy90=0.9968
+disp_kerr 412 1007 556s F60=0.9996 closed90=0.9996 noisy90=0.9963
+disp_kerr 412 1001 595s F60=0.9993 closed90=0.9993 noisy90=0.9965
+disp_kerr 412 1000 608s F60=0.9992 closed90=0.9992 noisy90=0.9962
+disp_kerr 412 1004 592s F60=0.9993 closed90=0.9993 noisy90=0.9962
+disp_kerr 412 1005 592s F60=0.9997 closed90=0.9997 noisy90=0.9972
+disp_kerr 824 1000 630s F60=1.0000 closed90=1.0000 noisy90=0.9924
+disp_kerr 824 1005 668s F60=1.0000 closed90=1.0000 noisy90=0.9935
+disp_kerr 412 1006 728s F60=0.9996 closed90=0.9996 noisy90=0.9965
+disp_kerr 824 1007 705s F60=1.0000 closed90=1.0000 noisy90=0.9917
+
+GKP preparation, target only, single-branch CS; Lindblad (Yale) at cutoff 90: mean +- sd [best] of 8 starts
+  T=412 ns  manuscript model (H0=0): 0.9569 +- 0.0123 [0.9744]
+  T=412 ns  disp      : noisy 0.9911 +- 0.0031 [0.9946]   closed 0.9944 [0.9979]  (n=8)
+  T=412 ns  disp_kerr : noisy 0.9959 +- 0.0017 [0.9972]   closed 0.9989 [0.9997]  (n=8)
+  T=824 ns  manuscript model (H0=0): 0.9942 +- 0.0006 [0.9949]
+  T=824 ns  disp      : noisy 0.9631 +- 0.0771 [0.9909]   closed 0.9705 [0.9992]  (n=8)
+  T=824 ns  disp_kerr : noisy 0.9932 +- 0.0013 [0.9958]   closed 1.0000 [1.0000]  (n=8)

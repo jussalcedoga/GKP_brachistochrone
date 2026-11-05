@@ -1,0 +1,29 @@
+# regenerated outputs
+output/
+# Python
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.venv/
+venv/
+# simulation smoke tests and reruns (written next to the stored results)
+data/**/results/smoke/
+*.done
+# LaTeX auxiliary files
+*.aux
+*.log
+*.out
+*.toc
+*.bbl
+*.blg
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+# ... but stored results are data, whatever their extension
+!data/**/*.log
+# editors and operating systems
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*~
