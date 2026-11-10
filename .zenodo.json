@@ -1,5 +1,5 @@
 {
-  "title": "Time- and photon-optimal paths for the preparation, transfer, and logical flip of Gottesman-Kitaev-Preskill states: code and data",
+  "title": "Time- and photon-optimal paths for the preparation and logical flip of Gottesman-Kitaev-Preskill states: code and data",
   "upload_type": "software",
   "description": "Code and stored results that reproduce every figure, table and quoted number of the paper, with the simulation scripts, their production command lines, the checks against the published figures and tables, SHA-256 checksums of every data file, and CSV copies of the result tables.",
   "license": "MIT",

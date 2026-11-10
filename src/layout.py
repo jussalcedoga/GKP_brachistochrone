@@ -24,6 +24,7 @@ OUT = pathlib.Path(os.environ.get("GKP_OUT", REPO / "output")).resolve()
 
 # repository path -> (original path in the working tree, "data" | "out")
 REGISTRY = {
+    'figures/Fig1/compute_sphere.py': ('manuscript_figures/fig1/compute_sphere.py', 'out'),
     'figures/Fig1/plot_fig1.py': ('manuscript_figures/fig1/plot_fig1.py', 'out'),
     'figures/Fig2/compute_fig2.py': ('manuscript_figures/fig2/compute_fig2.py', 'out'),
     'figures/Fig2/plot_fig2.py': ('manuscript_figures/fig2/plot_fig2.py', 'out'),

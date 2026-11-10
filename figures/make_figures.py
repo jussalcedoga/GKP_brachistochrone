@@ -36,7 +36,8 @@ def out(rel):
 # id, file name in the paper, commands (argv after the interpreter, relative to the repository root), produced PNG
 # (relative to output/)
 FIGURES = [
-    ("Fig1", "figures/fig1.png", [["figures/Fig1/plot_fig1.py"]], "manuscript_figures/fig1/fig1.png"),
+    ("Fig1", "figures/fig1.png", [["figures/Fig1/compute_sphere.py"], ["figures/Fig1/plot_fig1.py"]],
+     "manuscript_figures/fig1/fig1.png"),                     # (a, b) on one common sphere (Nov 9)
     ("Fig2", "figures/fig2.png", [["figures/Fig2/compute_fig2.py"], ["figures/Fig2/plot_fig2.py"]],
      "manuscript_figures/fig2/fig2.png"),
     ("Fig3", "figures/fig3.png", [["figures/Fig3/plot_fig3.py"]], "manuscript_figures/fig3/fig3.png"),

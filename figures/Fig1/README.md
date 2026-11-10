@@ -1,10 +1,10 @@
 # Fig. 1: Optimal paths for GKP preparation and the logical flip
 
-(a, b) brachistochrone, photon-optimal and trade-off paths projected onto a sphere of real states coloured by the mean photon number; (c, d) Wigner functions and target fidelities at the numbered points of the brachistochrones (computed exactly from the path states).
+(a, b) brachistochrone, photon-optimal and trade-off paths on one sphere of real states, spanned by |0>, |0_L> and |1_L> and shared by both panels, coloured by the mean photon number (the brachistochrones lie on it, the other paths keep at least 97% of their weight in it; `compute_sphere.py` checks the paths against the stored ones and records these weights); (c, d) Wigner functions and target fidelities at the numbered points of the brachistochrones (computed exactly from the path states).
 
 - **File in the paper:** `figures/fig1.png`
 - **Make target:** `make Fig1` (from the repository root, after `pip install -r requirements.txt`)
-- **Script:** `figures/Fig1/plot_fig1.py`
+- **Script:** `figures/Fig1/compute_sphere.py, then figures/Fig1/plot_fig1.py`
 - **Run time:** about 1 min on one core
 - **Input data:**
   - `data/manuscript/fig1_brachistochrone/results/fig1.json`, `fig1_wigner.npz` (grid)

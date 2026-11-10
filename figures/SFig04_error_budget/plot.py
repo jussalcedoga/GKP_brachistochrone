@@ -42,7 +42,8 @@ kC, mC = kappa_mu("CSproposal")
 KPHI = 2 / NOISE["Yale"]["Tphic"]                   # 1/us
 DEPH = S.INK                                        # cavity-dephasing term (no gray, teal, green, orange or yellow)
 DEPH_LS = (0, (6, 2, 1.5, 2))
-MEAS, PROP = "measured rates", "proposal rates"     # Sivak et al. (Yale device); Del Grosso et al. (CS proposal)
+MEAS, PROP = "Sivak et al. rates", "CS-proposal rates"   # Nov 9 (advisor): name the sources (panel titles, short)
+MEAS_KEY, PROP_KEY = "rates of Sivak et al.", "rates of the CS proposal of Del Grosso et al."   # the key, in full
 FLIP = r"$|0_L\rangle\to|1_L\rangle$"
 PREP = r"$|0\rangle\to|0_L\rangle$"
 trapz = getattr(np, "trapezoid", None) or np.trapz
@@ -251,8 +252,8 @@ hs = [Line2D([], [], color=S.ROYALBLUE, lw=3.4, ls=(0, (5, 2))), Line2D([], [], 
 fig.legend(hs, [r"time $\Gamma_qT$", r"photons $\kappa\!\int\!\bar n\,dt$",
                 r"cavity dephasing $\kappa_\phi\!\int\!{\rm Var}(\hat n)\,dt$", r"complete $\epsilon_1$",
                 r"$\epsilon_1$ without cavity dephasing", r"brachistochrone ($w=0$)", r"photon optimum ($w\to\infty$)",
-                r"increasing $w$", rf"$w^*=\kappa/\Gamma_q={kY / mY:.2f}$ ({MEAS})",
-                rf"$w^*=\kappa/\Gamma_q={kC / mC:.2f}$ ({PROP})", r"minimum of the complete $\epsilon_1$"],
+                r"increasing $w$", rf"$w^*=\kappa/\Gamma_q={kY / mY:.2f}$ ({MEAS_KEY})",
+                rf"$w^*=\kappa/\Gamma_q={kC / mC:.2f}$ ({PROP_KEY})", r"minimum of the complete $\epsilon_1$"],
            handler_map={tuple: HandlerTuple(ndivide=None, pad=0.3)},
            loc="upper center", ncol=3, fontsize=FS["small"] - 1, bbox_to_anchor=(0.50, 1.0), columnspacing=1.6,
            handlelength=1.8, handletextpad=0.5, borderpad=0.05, borderaxespad=0.0, labelspacing=0.3)

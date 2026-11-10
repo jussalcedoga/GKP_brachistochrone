@@ -42,7 +42,7 @@ for j, (ax, k, letter) in enumerate(zip(axs, (1, 2, 3), "abc")):
     ax.set_xscale("log")
     ax.set_xlim(4e-3, 0.6)
     ax.set_ylim(0.0, 1.0)
-    ax.set_xlabel(r"target infidelity $1-F_T$")
+    ax.set_xlabel(r"target infidelity $1-\mathcal{F}_T$")        # Nov 9: script F for the target fidelity
     ax.set_title(f"$T={R[f'cs/k{k}']['T_ns']:.0f}$ ns", fontsize=FS["title"], pad=10)
     if j == 0:
         ax.set_ylabel(r"closeness $C$")

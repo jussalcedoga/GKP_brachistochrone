@@ -139,7 +139,7 @@ for j, (name, title) in enumerate((("gkp", r"GKP $|0_L\rangle$, $\Delta=0.4$"), 
     top = 1.22 * max(num["total"].max(), cl["total"].max(), one["a"].max())
     ax.set_xlim(0, 1)
     ax.set_ylim(-0.008 * top / 0.15, top)
-    ax.set_xlabel(r"path fraction $s=\vartheta/\theta$")
+    ax.set_xlabel(r"path fraction $\varphi/\theta$")    # Nov 9 (advisor): phi, the angle along the brachistochrone
     ax.set_title(title, fontsize=FS["title"])
     S.panel_label(ax, "bc"[j], x=-0.21, y=1.04)
 axs[1].set_ylabel(r"departure (rad)")

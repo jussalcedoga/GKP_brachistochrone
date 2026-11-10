@@ -1,13 +1,13 @@
 {
  "figures/fig1.png": {
   "label": "Fig. 1",
-  "md5": "a23d37de1fef18d334448064f598a54c",
+  "md5": "a0041027e7f3731db8eed8d813e2a34e",
   "width": 4688,
   "height": 4734
  },
  "figures/fig2.png": {
   "label": "Fig. 2",
-  "md5": "86599f0c3bfc1370a2bf6dd1a28d13e6",
+  "md5": "b71b3e39ba9457b7e60ea2abf28f4e42",
   "width": 2360,
   "height": 3130
  },
@@ -19,13 +19,13 @@
  },
  "figures/fig4.png": {
   "label": "Fig. 4",
-  "md5": "6e02875d6a61a5b33b873ba5a6bc9373",
+  "md5": "00ec3452d7e3d8720250ac1a8a91e07d",
   "width": 5594,
   "height": 2394
  },
  "si_figures/S02.png": {
   "label": "Supplementary Fig. 1",
-  "md5": "938068a68cc36ab965a8411ffac240c1",
+  "md5": "4f0e7678d0f1abead2e1962527b9d72a",
   "width": 4771,
   "height": 1805
  },
@@ -43,8 +43,8 @@
  },
  "si_figures/S05.png": {
   "label": "Supplementary Fig. 4",
-  "md5": "4798089ccdc8af1b5ce358bfa111b8d5",
-  "width": 4540,
+  "md5": "dee87d18487c3066e72a4f92de214673",
+  "width": 5063,
   "height": 3716
  },
  "si_figures/S04.png": {
@@ -73,25 +73,25 @@
  },
  "si_figures/S23.png": {
   "label": "Supplementary Fig. 9",
-  "md5": "1c01bb2a00d8f0fb6ab34ded63ae56f4",
+  "md5": "28af07c22841303526009cb928638a0e",
   "width": 4695,
   "height": 1706
  },
  "si_figures/S09.png": {
   "label": "Supplementary Fig. 10",
-  "md5": "32b229308249e1e329a947099af29598",
+  "md5": "5bf3fdb482a6dcdae71935c3324653aa",
   "width": 4347,
   "height": 2824
  },
  "si_figures/S10.png": {
   "label": "Supplementary Fig. 11",
-  "md5": "c05e6a5905a4a30c538c50759576541f",
+  "md5": "c90dc5c68cb0fe73431f91ab7c27eb61",
   "width": 4347,
   "height": 2824
  },
  "si_figures/S11.png": {
   "label": "Supplementary Fig. 12",
-  "md5": "ac204d78c09297f02bff02d3b9664759",
+  "md5": "e8efc2f9c82728789131929f61754727",
   "width": 4347,
   "height": 2824
  },

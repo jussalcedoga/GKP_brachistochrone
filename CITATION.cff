@@ -1,10 +1,10 @@
 cff-version: 1.2.0
 message: "If you use this code or data, please cite the paper below."
-title: "Time- and photon-optimal paths for the preparation, transfer, and logical flip of Gottesman-Kitaev-Preskill states: code and data"
+title: "Time- and photon-optimal paths for the preparation and logical flip of Gottesman-Kitaev-Preskill states: code and data"
 type: software
 license: MIT
-version: "1.1.0"
-date-released: "2026-11-05"
+version: "1.2.0"
+date-released: "2026-11-09"
 repository-code: "https://github.com/jussalcedoga/GKP_brachistochrone"
 # doi: "10.5281/zenodo.XXXXXXX"
 authors:
@@ -37,7 +37,7 @@ keywords:
   - conditional squeezing
 preferred-citation:
   type: article
-  title: "Time- and photon-optimal paths for the preparation, transfer, and logical flip of Gottesman-Kitaev-Preskill states"
+  title: "Time- and photon-optimal paths for the preparation and logical flip of Gottesman-Kitaev-Preskill states"
   authors:
     - family-names: Curtis
       given-names: Aidan

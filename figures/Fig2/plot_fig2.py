@@ -103,7 +103,7 @@ def fid_of_t(ax, key, letter):
     else:
         ax.set_ylim(0, 1.04)
     ax.set_xlabel(r"time $t$ (ns)")
-    ax.set_ylabel(r"$F_T$")
+    ax.set_ylabel(r"$\mathcal{F}_T$")                  # Nov 9 (advisor): script F for the target fidelity
     S.panel_label(ax, letter, x=-0.40, y=1.02, size=FS["panel"])
 
 
@@ -118,7 +118,7 @@ def n_of_F(ax, key, letter):
     ax.set_xlim(0.5 if key == "gkp" else 0.0, 1.0)
     ax.set_ylim(0, 2.9 if key == "gkp" else 4.0)
     ax.set_xticks([0.5, 0.75, 1.0] if key == "gkp" else [0, 0.5, 1.0])
-    ax.set_xlabel(r"target fidelity $F_T$")
+    ax.set_xlabel(r"target fidelity $\mathcal{F}_T$")
     ax.set_ylabel(r"$\bar n$")
     ax.set_title(TITLE[key], fontsize=FS["title"], pad=8)
     S.panel_label(ax, letter, x=-0.40, y=1.02, size=FS["panel"])

@@ -329,7 +329,7 @@ for col, k in enumerate(KS):
         ax.tick_params(axis="x", pad=9)
         ax.tick_params(axis="y", pad=7)
     if col == 0:
-        ax.set_ylabel(r"$F_T$", fontsize=ALAB if (WIDE and not DV) else FS["label"] + (5 if LAND else 3))
+        ax.set_ylabel(r"$\mathcal{F}_T$", fontsize=ALAB if (WIDE and not DV) else FS["label"] + (5 if LAND else 3))   # Nov 9: script F
         panel_label(ax, "c", y=0.97)
     else:
         ax.set_yticklabels([])
@@ -511,7 +511,7 @@ if LAND:
 
         tab(XG - 0.12, yt0 + 0.5 * TAB_ROW, r"(\%)", S.INK, ha="right")
         tab(XT[0], yt0 + 0.5 * TAB_ROW, r"$\epsilon_1$", S.INK)
-        tab(0.5 * (XT[1] + XT[3]), yt0 + 0.5 * TAB_ROW, r"$1-F_T$", S.INK)
+        tab(0.5 * (XT[1] + XT[3]), yt0 + 0.5 * TAB_ROW, r"$1-\mathcal{F}_T$", S.INK)
         for r_, cells in enumerate(table):
             y = yt0 + (r_ + 1.5) * TAB_ROW
             tab(XG - 0.12, y, f"({ROMAN[r_]})", S.INK, ha="right")

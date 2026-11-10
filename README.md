@@ -3,7 +3,7 @@
 Code and stored results for the paper
 
 > A. Curtis, J. S. Salcedo-Gallo, K. Limanta, S. Leonov, P. Chin, S. Bedkihal, and M. Fitzpatrick,
-> *Time- and photon-optimal paths for the preparation, transfer, and logical flip of Gottesman–Kitaev–Preskill states*.
+> *Time- and photon-optimal paths for the preparation and logical flip of Gottesman–Kitaev–Preskill states*.
 
 - **Paper (Letter):** journal link to be added (`https://doi.org/XX.XXXX/XXXXX`), preprint `https://arxiv.org/abs/XXXX.XXXXX`
 - **Supplementary Information:** link to be added (published with the Letter; also in the arXiv record)
@@ -104,7 +104,7 @@ tracking runs), "rho80" for the oscillator states of the representative runs in 
 
 | figure | file in the paper | script | input data (in `data/`) | time | command |
 |---|---|---|---|---|---|
-| Fig. 1 | `figures/fig1.png` | [`figures/Fig1/plot_fig1.py`](figures/Fig1/plot_fig1.py) | `manuscript/fig1_brachistochrone/results/fig1.json`, `fig1_wigner.npz`; `manuscript/fig2_photon_optimal/results/fig2.json`; `manuscript/fig3_time_vs_photon/results/fig3.json` | 1 min | `make Fig1` |
+| Fig. 1 | `figures/fig1.png` | [`figures/Fig1/compute_sphere.py`](figures/Fig1/compute_sphere.py) (the common sphere of (a, b), span{\|0⟩, \|0_L⟩, \|1_L⟩}), then [`plot_fig1.py`](figures/Fig1/plot_fig1.py) | `manuscript/fig1_brachistochrone/results/fig1.json`, `fig1_wigner.npz`; `manuscript/fig2_photon_optimal/results/fig2.json`; `manuscript/fig3_time_vs_photon/results/fig3.json` | 1 min | `make Fig1` |
 | Fig. 2 | `figures/fig2.png` | [`figures/Fig2/compute_fig2.py`](figures/Fig2/compute_fig2.py), then [`plot_fig2.py`](figures/Fig2/plot_fig2.py) | `manuscript/fig2_photon_optimal/results/fig2.json` (closed form, $m(F)$ and bound computed by `compute_fig2.py`) | 40 s | `make Fig2` |
 | Fig. 3 | `figures/fig3.png` | [`figures/Fig3/plot_fig3.py`](figures/Fig3/plot_fig3.py) | `fig2.json`; reference paths `manuscript_figures/supplementary_information/_cache/path_*.npz` | 30 s | `make Fig3` |
 | Fig. 4 (two columns) | `figures/fig4.png` | [`figures/Fig4/plot_fig4.py`](figures/Fig4/plot_fig4.py) `--wide` | traces80 (20 starts per gate set and duration); rho80 of the 3 representative starts; `…/results/wigner/gkp_geodesic_cs_k2.npz` | 70 s | `make Fig4` |

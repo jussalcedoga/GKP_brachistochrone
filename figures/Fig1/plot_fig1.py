@@ -1,7 +1,9 @@
 """Fig. 1: the time-optimal and photon-optimal paths in state space, and the states along the brachistochrone.
-(a, b) the unit sphere of the real three-dimensional subspace span{|S>, |chi>, |eta>} that holds the paths (shading and
-contours: <n> of every state of the sphere) with the brachistochrone, the photon-optimal path and (flip) the trade-off
-path; the five snapshot times of (c, d) are marked on the brachistochrone, numbered, filled with growing opacity 1 -> 5.
+(a, b) one common sphere (Nov 9): the unit sphere of the real subspace span{|0>, |0_L>, |1_L>} (fig1_sphere.json, written
+by compute_sphere.py), seen from the same direction in both panels, so they share the shading and contours (<n> of every
+state of the sphere) and the positions of the three states; on it the brachistochrone, the photon-optimal path and
+(flip) the trade-off path (normalized projections, smallest weight in the subspace 0.973); the five snapshot times of
+(c, d) are marked on the brachistochrone, numbered, filled with growing opacity 1 -> 5.
 (c, d) Wigner functions of the brachistochrone state at t = 0, T*/4, T*/2, 3T*/4, T*, with the target fidelity
 F_T = |<T|p(t)>|^2 = cos^2(theta_0 - omega t).
 Reads manuscript/fig1_brachistochrone/results (fig1.json; of fig1_wigner.npz only the grid and the snapshot fractions) and
@@ -29,6 +31,7 @@ import numpy as np  # noqa: E402
 FS = M.FS
 SRC = M.MS / "fig1_brachistochrone" / "results"
 R = json.loads((SRC / "fig1.json").read_text())
+RS = json.loads((HERE / "fig1_sphere.json").read_text())   # (a, b) on one sphere, span{|0>, |0_L>, |1_L>} (compute_sphere.py)
 
 
 def wigner_snapshots():
@@ -91,18 +94,24 @@ def badge(ax, x, y, j, transform, size):
             bbox=dict(boxstyle="circle,pad=0.24", fc=(*matplotlib.colors.to_rgb(S.ROYALBLUE), a), ec=S.ROYALBLUE, lw=1.8))
 
 
-def sphere(ax, key, labels, title, letter, offsets, num_off, alpha_view=0.30):
-    d = R[key]
+def sphere(ax, key, labels, title, letter, offsets, num_off, alpha_view=0.30, frame=None, extra=()):
+    """one panel on the common sphere of fig1_sphere.json (span{|0>, |0_L>, |1_L>}, Nov 9): `frame` (ex, ey, view) fixes
+    the orientation, so both panels share it; `extra` lists further labelled states (xyz, label), drawn as dots"""
+    d = RS[key]
     N3 = np.array(d["N3"])
     P = {k: np.array(v["xyz"]) for k, v in d["paths"].items()}
     end = P["geodesic"][-1]
-    mid = P["geodesic"][0] + end
-    mid /= np.linalg.norm(mid)
-    v = np.cos(alpha_view) * mid + np.sin(alpha_view) * np.array([0, 0, 1.0])
-    v /= np.linalg.norm(v)
-    ey = np.array([0, 0, 1.0]) - v[2] * v
-    ey /= np.linalg.norm(ey)
-    ex = np.cross(ey, v)
+    if frame is None:                        # look at the middle of the brachistochrone, tilted toward the departure axis
+        mid = P["geodesic"][0] + end
+        mid /= np.linalg.norm(mid)
+        v = np.cos(alpha_view) * mid + np.sin(alpha_view) * np.array([0, 0, 1.0])
+        v /= np.linalg.norm(v)
+        ey = np.array([0, 0, 1.0]) - v[2] * v
+        ey /= np.linalg.norm(ey)
+        ex = np.cross(ey, v)
+    else:
+        ex, ey, v = (np.asarray(w, float) for w in frame)
+    frame_used = (ex.copy(), ey.copy(), v.copy())          # returned (v is reused below for contour vertices)
     n = 701
     X, Y = np.meshgrid(np.linspace(-1, 1, n), np.linspace(-1, 1, n))
     R2 = X ** 2 + Y ** 2
@@ -129,12 +138,15 @@ def sphere(ax, key, labels, title, letter, offsets, num_off, alpha_view=0.30):
     pts = [(P["geodesic"][0], labels[0]), (end, labels[1])]
     if labels[2]:
         pts.append((np.array(d["vacuum"]["xyz"]), labels[2]))
+    pts += [(np.array(q, float), lab) for q, lab in extra]
     for (q, lab), (off, ha) in zip(pts, offsets):
         x0, y0 = proj(q)
         ax.annotate(lab, (x0[0], y0[0]), xytext=off, textcoords="offset points", ha=ha, va="center", fontsize=FS["label"] + 2,
                     zorder=9, bbox=KET)
-    if labels[2]:                                        # the vacuum, reached by the photon-optimal path of the flip
-        x0, y0 = proj(np.array(d["vacuum"]["xyz"]))
+    # states that are no end point of this panel's paths: the vacuum in (b), |1_L> in (a)
+    dots = ([np.array(d["vacuum"]["xyz"])] if labels[2] else []) + [np.array(q, float) for q, _ in extra]
+    for q in dots:
+        x0, y0 = proj(q)
         ax.plot(x0, y0, "o", ms=14, color=S.INK, mec="white", mew=1.8, zorder=6)
     Tn = T_TRUE[(key, "geodesic")]
     snaps = at_times(P["geodesic"], np.array(Wz["fr"]) * Tn, key, "geodesic")    # the snapshot times of (c, d)
@@ -160,8 +172,8 @@ def sphere(ax, key, labels, title, letter, offsets, num_off, alpha_view=0.30):
         x0, y0 = proj(q)
         dx = {"right": -0.16, "left": 0.16, "center": 0.0}[ha]
         avoid.append((x0[0] + off[0] / ppu + dx, y0[0] + off[1] / ppu, 0.24))
-    if labels[2]:
-        x0, y0 = proj(np.array(d["vacuum"]["xyz"]))
+    for q in dots:
+        x0, y0 = proj(q)
         avoid.append((x0[0], y0[0], 0.08))
     av = np.array(avoid)
     manual = []
@@ -187,6 +199,7 @@ def sphere(ax, key, labels, title, letter, offsets, num_off, alpha_view=0.30):
     bb = tt.get_window_extent(renderer=ax.figure.canvas.get_renderer())
     x_left = ax.transAxes.inverted().transform((bb.x0, bb.y0))[0]
     ax.text(x_left - 0.02, 1.0, f"({letter})", transform=ax.transAxes, fontsize=FS["panel"], ha="right", va="bottom")
+    return frame_used
 
 
 def wigner_rows(fig, gs_rows):
@@ -202,7 +215,7 @@ def wigner_rows(fig, gs_rows):
             badge(ax, 0.12, 1.12, k, ax.transAxes, FS["small"])
             ax.text(0.26, 1.12, rf"$t={fr[k] * Tn:.0f}$ ns", transform=ax.transAxes, fontsize=FS["ann"], ha="left",
                     va="center")
-            ax.text(0.05, 0.05, rf"$F_T={TR[name]['F_target_snap'][k]:.2f}$", transform=ax.transAxes, fontsize=FS["small"] + 2,
+            ax.text(0.05, 0.05, rf"$\mathcal{{F}}_T={TR[name]['F_target_snap'][k]:.2f}$", transform=ax.transAxes, fontsize=FS["small"] + 2,
                     va="bottom", ha="left", bbox=dict(fc="white", ec="none", alpha=0.85, pad=1.4))
             ax.set_xticks([-4, 0, 4])
             ax.set_yticks([-4, 0, 4])
@@ -230,13 +243,18 @@ g = fig.add_gridspec(3, 1, height_ratios=[1.78, 1, 1], hspace=0.52, top=0.905, b
 top = g[0].subgridspec(1, 3, width_ratios=[1, 1, 0.05], wspace=0.05)
 tp = [T_TRUE[("sphere_prep", k)] for k in ("geodesic", "photon")]
 tf = [T_TRUE[("sphere_flip", k)] for k in ("geodesic", "tradeoff", "photon")]
-sphere(fig.add_subplot(top[0]), "sphere_prep", (r"$|0\rangle$", r"$|0_L\rangle$", None),
-       rf"preparation: ${tp[0]:.0f}$ vs ${tp[1]:.0f}$ ns", "a", [((-26, -6), "right"), ((26, 20), "left")],
-       num_off=[(0, -26), (0, -26), (0, -26), (0, -26), (0, -26)])
-sphere(fig.add_subplot(top[1]), "sphere_flip", (r"$|0_L\rangle$", r"$|1_L\rangle$", r"$|0\rangle$"),
-       rf"$|0_L\rangle\to|1_L\rangle$: ${tf[0]:.0f}$, ${tf[1]:.0f}$, ${tf[2]:.0f}$ ns", "b",
-       [((0, -68), "center"), ((0, -68), "center"), ((0, 30), "center")],
-       num_off=[(-4, -28), (0, -28), (0, -28), (0, -28), (4, -28)])
+ax_a, ax_b = fig.add_subplot(top[0]), fig.add_subplot(top[1])
+frame_b = sphere(ax_b, "sphere_flip", (r"$|0_L\rangle$", r"$|1_L\rangle$", r"$|0\rangle$"),
+                 rf"$|0_L\rangle\to|1_L\rangle$: ${tf[0]:.0f}$, ${tf[1]:.0f}$, ${tf[2]:.0f}$ ns", "b",
+                 [((0, -68), "center"), ((0, -68), "center"), ((0, 30), "center")],
+                 num_off=[(-4, -28), (0, -28), (0, -28), (0, -28), (4, -28)])
+# Nov 9 (author, advisor): (a) on the same sphere as (b), seen from the same direction, so both panels share the contours
+# and the positions of |0>, |0_L> and |1_L>
+sphere(ax_a, "sphere_prep", (r"$|0\rangle$", r"$|0_L\rangle$", None),
+       rf"preparation: ${tp[0]:.0f}$ vs ${tp[1]:.0f}$ ns", "a",
+       [((0, 30), "center"), ((0, -68), "center"), ((0, -68), "center")],
+       num_off=[(-30, -8), (-30, 0), (-30, 0), (-30, 0), (-30, 0)],        # on the side away from the photon-optimal path
+       frame=frame_b, extra=[(RS["states"]["1L"], r"$|1_L\rangle$")])
 sm = plt.cm.ScalarMappable(cmap=S.NCMAP, norm=plt.Normalize(0, NMAX))
 cb = fig.colorbar(sm, cax=fig.add_subplot(top[2]))
 cb.set_label(r"photon number $\bar n$", fontsize=FS["label"] + 3)
