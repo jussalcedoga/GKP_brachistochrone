@@ -2,8 +2,8 @@
 
 Code and stored results for the paper
 
-> A. Curtis, J. S. Salcedo-Gallo, K. Limanta, S. Leonov, P. Chin, S. Bedkihal, and M. Fitzpatrick,
-> *Time- and photon-optimal paths for the preparation and logical flip of Gottesman–Kitaev–Preskill states*.
+> A. Curtis, J. S. Salcedo-Gallo, S. Leonov, K. Limanta, P. Chin, S. Bedkihal, and M. Fitzpatrick,
+> *Time- and Photon-Optimal Paths for the Preparation and Logical Flip of Gottesman–Kitaev–Preskill States*.
 
 - **Paper (Letter):** journal link to be added (`https://doi.org/XX.XXXX/XXXXX`), preprint `https://arxiv.org/abs/XXXX.XXXXX`
 - **Supplementary Information:** link to be added (published with the Letter; also in the arXiv record)
@@ -21,7 +21,7 @@ simulation scripts are included too, with the command lines, hardware and run ti
 | confirm that the stored data are intact | `make verify` | SHA-256 of every file in `data/` against [`data/SHA256SUMS`](data/SHA256SUMS) |
 | rebuild every figure | `make figures` | each PNG against the published file (md5, pixel size) and the numbers each figure shows (`*_facts.json`) against their stored copies |
 | rebuild the tables and the quoted numbers | `make numbers` | every cell of Table I and of Supplementary Tables 2, 7–9, 13 and 15 against the printed cell; every key number of the Letter against the data (`PASS`/`FAIL`, exit status 1 on any failure) |
-| rerun the analyses of the stored results | `make analyses` | the regenerated analysis files against the stored ones (relative 1e-9) |
+| rerun the analyses of the stored results | `make analyses` | the regenerated analysis files against the stored ones (relative 1e-9, absolute 1e-12) |
 | test the shared library | `make test` | the GKP states, the brachistochrone Hamiltonians, the gate sets and the GRAPE gradient against independent constructions |
 | audit a number by hand | open [`data/csv/`](data/csv/) | one row per optimization run (every start, nothing excluded), in plain CSV |
 | rerun the long simulations | see [Long simulations](#long-simulations-and-analyses) | the production command lines, run times and hardware |
@@ -177,7 +177,7 @@ recorded script names are ignored).
 
 | numbers | script | data | check |
 |---|---|---|---|
-| every key number of the Letter: the speed limit, $T^*$ = 140, 237 and 294 ns, $\langle0_L\|1_L\rangle$, $\bar n$ of the logical states, the target-only fidelities, the Fig. 1 weight $\geq0.987$, the photon savings (7% in time for 8% in exposure, at most 26%, the transfer at 294, 350 and 397 ns), the capacity $0.51\omega$, the flip-gate fidelities, the parity-detectable share of the error, the displacement-rate bound of the experiments, the 15–35% exposure saving of CS, … | [`numbers/letter_numbers.py`](numbers/letter_numbers.py) | the stored results listed in the script, and an independent GKP construction written in the script (analytic benchmarks: the overlaps, photon numbers and Bures angles of the finite-energy GKP states, the brachistochrone durations) | each number is recomputed and tested against the printed value (`PASS`/`FAIL`, exit status 1 on any `FAIL`). With `GKP_PAPER_TEX=<folder with main.tex and supplement.tex>` it also reports (`MISS`, not a failure) any quoted phrase that the final text words differently |
+| every key number of the Letter, and the numbers of the Supplementary Information behind them: the speed limit, $T^*$ = 140, 237 and 294 ns, $\langle0_L\|1_L\rangle$, $\bar n$ of the logical states, the target-only fidelities, the squeezing term alone (0.730 for $\ket{0_L}$, 0.331 for $\ket{1_L}$), the photon savings (7% in time for 8% in exposure, below 26%, the transfer at 294, 350 and 397 ns), the capacity $0.51\omega$, the flip-gate fidelities, the parity-detectable share of the error, the displacement-rate bound of the experiments, the 15–35% exposure saving of CS, … | [`numbers/letter_numbers.py`](numbers/letter_numbers.py) | the stored results listed in the script, and an independent GKP construction written in the script (analytic benchmarks: the overlaps, photon numbers and Bures angles of the finite-energy GKP states, the brachistochrone durations) | each number is recomputed and tested against the printed value (`PASS`/`FAIL`, exit status 1 on any `FAIL`). With `GKP_PAPER_TEX=<folder with main.tex and supplement.tex>` (for example the unpacked arXiv source) it also reports (`MISS`, not a failure) any quoted phrase that the final text words differently |
 | the reductions of $\epsilon_1$ of the transfer (22–26% without, about 40% with cavity dephasing), with the photon-optimal transfer rebuilt from its stored nodes; the photon-optimal time of $\ket{1_L}$ at $\Delta=0.3$ (printed for information) | [`numbers/letter_numbers2.py`](numbers/letter_numbers2.py) | `paths.npz`, `audit_photon2.json`, `fig3.json`, `state_gallery.json` | `PASS`/`FAIL` against the printed values |
 | the numbers of SI Sec. X (optimized pulses) and Supplementary Table 14 | [`numbers/pulses_text_facts.py`](numbers/pulses_text_facts.py) | pulses, `S2{5,6,7}_facts.json` | 143 assertions against the raw arrays |
 | the numbers each figure shows (fidelities, closeness, representative starts, counts of starts) | each figure script writes `*_facts.json` | as for the figure | `tools/compare_figures.py` compares them with the stored copies |

@@ -1,10 +1,10 @@
 cff-version: 1.2.0
 message: "If you use this code or data, please cite the paper below."
-title: "Time- and photon-optimal paths for the preparation and logical flip of Gottesman-Kitaev-Preskill states: code and data"
+title: "Time- and Photon-Optimal Paths for the Preparation and Logical Flip of Gottesman-Kitaev-Preskill States: Code and Data"
 type: software
 license: MIT
-version: "1.2.0"
-date-released: "2026-11-09"
+version: "1.3.0"
+date-released: "2026-11-10"
 repository-code: "https://github.com/jussalcedoga/GKP_brachistochrone"
 # doi: "10.5281/zenodo.XXXXXXX"
 authors:
@@ -14,11 +14,11 @@ authors:
   - family-names: Salcedo-Gallo
     given-names: Juan S.
     affiliation: "Thayer School of Engineering, Dartmouth College"
-  - family-names: Limanta
-    given-names: Kevin
-    affiliation: "Thayer School of Engineering, Dartmouth College"
   - family-names: Leonov
     given-names: Sergei
+    affiliation: "Thayer School of Engineering, Dartmouth College"
+  - family-names: Limanta
+    given-names: Kevin
     affiliation: "Thayer School of Engineering, Dartmouth College"
   - family-names: Chin
     given-names: Peter
@@ -37,16 +37,16 @@ keywords:
   - conditional squeezing
 preferred-citation:
   type: article
-  title: "Time- and photon-optimal paths for the preparation and logical flip of Gottesman-Kitaev-Preskill states"
+  title: "Time- and Photon-Optimal Paths for the Preparation and Logical Flip of Gottesman-Kitaev-Preskill States"
   authors:
     - family-names: Curtis
       given-names: Aidan
     - family-names: Salcedo-Gallo
       given-names: Juan S.
-    - family-names: Limanta
-      given-names: Kevin
     - family-names: Leonov
       given-names: Sergei
+    - family-names: Limanta
+      given-names: Kevin
     - family-names: Chin
       given-names: Peter
     - family-names: Bedkihal

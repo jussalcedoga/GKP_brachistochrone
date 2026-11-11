@@ -1,8 +1,9 @@
 """Compare two data trees (for example data/ and a copy in which an analysis or simulation was rerun).
 
-For every file present in both trees: JSON and JSON-lines numerically (relative tolerance --rtol; run times and script
-names are ignored, and lists of records with an "id" are matched by id), .npz array by array
-(numpy.allclose with --rtol and --atol), anything else byte by byte.
+For every file present in both trees: JSON and JSON-lines numerically (|a - b| <= atol + rtol max(|a|, |b|), so values
+that are zero up to floating-point noise compare equal; run times and script names are ignored, and lists of records
+with an "id" are matched by id), .npz array by array (numpy.allclose with --rtol and --atol), anything else byte by
+byte.
 
 Usage:  python tools/compare_data.py data /path/to/rerun/data [--only manuscript_figures/analytics_audit/round3]
 """
@@ -26,7 +27,7 @@ def _by_id(x):
     return x
 
 
-def num_diff(a, b, rtol, path=""):
+def num_diff(a, b, rtol, atol, path=""):
     a, b = _by_id(a), _by_id(b)
     if isinstance(a, dict) and isinstance(b, dict):
         out = []
@@ -34,16 +35,16 @@ def num_diff(a, b, rtol, path=""):
             if k not in a or k not in b:
                 out.append(f"{path}/{k}: missing on one side")
             else:
-                out += num_diff(a[k], b[k], rtol, f"{path}/{k}")
+                out += num_diff(a[k], b[k], rtol, atol, f"{path}/{k}")
         return out
     if isinstance(a, list) and isinstance(b, list):
         if len(a) != len(b):
             return [f"{path}: length {len(a)} vs {len(b)}"]
-        return [d for i, (x, y) in enumerate(zip(a, b)) for d in num_diff(x, y, rtol, f"{path}[{i}]")]
+        return [d for i, (x, y) in enumerate(zip(a, b)) for d in num_diff(x, y, rtol, atol, f"{path}[{i}]")]
     if isinstance(a, (int, float)) and isinstance(b, (int, float)) and not isinstance(a, bool):
         if a == b or (math.isnan(a) and math.isnan(b)):
             return []
-        if math.isfinite(a) and math.isfinite(b) and abs(a - b) <= rtol * max(abs(a), abs(b)):
+        if math.isfinite(a) and math.isfinite(b) and abs(a - b) <= atol + rtol * max(abs(a), abs(b)):
             return []
         return [f"{path}: {a!r} vs {b!r}"]
     return [] if a == b else [f"{path}: {str(a)[:50]!r} vs {str(b)[:50]!r}"]
@@ -51,11 +52,11 @@ def num_diff(a, b, rtol, path=""):
 
 def compare(p, q, rtol, atol):
     if p.suffix == ".json":
-        return num_diff(json.loads(p.read_text()), json.loads(q.read_text()), rtol)
+        return num_diff(json.loads(p.read_text()), json.loads(q.read_text()), rtol, atol)
     if p.suffix == ".jsonl":
         a = [json.loads(l) for l in p.read_text().splitlines() if l.strip()]
         b = [json.loads(l) for l in q.read_text().splitlines() if l.strip()]
-        return num_diff(a, b, rtol)
+        return num_diff(a, b, rtol, atol)
     if p.suffix == ".npz":
         import numpy as np
         A, B = np.load(p, allow_pickle=False), np.load(q, allow_pickle=False)

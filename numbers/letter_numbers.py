@@ -1,6 +1,7 @@
-"""Letter verification (Nov 2): regenerate every key number of main.tex of the paper from stored data and, where
-cheap, from an independent GKP construction written here (lattice sum of the Letter, Eq. (2)). Each check prints the
-recomputed value, the printed phrase, and PASS/FAIL (phrase present verbatim in the current main.tex and value in range).
+"""Letter verification: regenerate every key number of the Letter (main.tex), and the numbers of the Supplementary
+Information (supplement.tex) behind them, from stored data and, where cheap, from an independent GKP construction
+written here (lattice sum of the Letter, Eq. (2)). Each value check prints the recomputed value and PASS/FAIL. With
+GKP_PAPER_TEX set, each wording check also reports whether the printed phrase is in the final text (MISS if not).
 Run: python letter_numbers.py"""
 import json
 import math
@@ -80,8 +81,9 @@ for k, p in printed.items():
     if not ok:
         fails.append(f"Table I {k}")
     need(p, f"target-only table cell {k} (Supplementary Table 15)", SUPP)
-need(f"with a fidelity of {cells[('cs', 412)][1]:.3f}", "CS 0.998 at 412 ns")
-need(f"reach {cells[('cd', 412)][1]:.2f} and {cells[('snap', 412)][1]:.2f}", "ECD/SNAP 0.80/0.63")
+need(f"and {cells[('cs', 412)][1]:.3f} without it", "CS target-only mean 0.998 at 412 ns (SI)", SUPP)
+need(f"target-only best of {cells[('cd', 412)][4]:.3f} and {cells[('snap', 412)][4]:.3f}",
+     "CD and SNAP target-only best 0.813 and 0.644 at 412 ns (SI)", SUPP)
 sp = max(cells[(g, 824)][1] for g in ("cs", "cd", "snap4")) - min(cells[(g, 824)][1] for g in ("cs", "cd", "snap4"))
 inrange(sp, 0.0, 0.0115, "824 ns spread 'within about 0.01'")
 
@@ -117,7 +119,7 @@ c0, c1, c = z0[0], z1[0], z0 @ z1
 th0, th = math.acos(c0), math.acos(c)
 print(f"\n== own GKP (D={D}): c0={c0:.4f} c1={c1:.4f} c=<0L|1L>={c:.6f} odd weight {np.sum(z0[1::2] ** 2):.1e}")
 print(f"  T*(0_L)={th0 / OM:.2f} ns  T*(1_L)={math.acos(c1) / OM:.2f} ns  T*(flip)={th / OM:.2f} ns")
-need(f"takes $T^*={th0 / OM:.0f}$~ns", "T* = 140 ns")
+need(f"takes $T^*={th0 / OM:.0f}$~ns", "T* = 140 ns (SI)", SUPP)
 need(f"logical states takes {th / OM:.0f}~ns", "T* flip = 294 ns")
 F2 = json.loads((R / "manuscript/fig2_photon_optimal/results/fig2.json").read_text())
 inrange(F2["prep"]["gkp"]["geodesic"]["T_ns"], 139.5, 140.5, "fig2.json T*(0_L)")
@@ -154,33 +156,26 @@ for Dd in (90, 120, 160):
     h2 = y0[2] / (math.sqrt(2) * math.sin(t0))
     vac = np.zeros(Dd); vac[0] = 1
     Fp = (y0 @ (expm(t0 * h2 * S2) @ vac)) ** 2
+    t1 = math.acos(y1[0])                       # |1_L> from the vacuum
+    F1p = (y1 @ (expm(t1 * y1[2] / (math.sqrt(2) * math.sin(t1)) * S2) @ vac)) ** 2
     # flip: h_{2,0} = omega <2|Y_L|0>/sqrt2, Y_L = i(|1perp><0L| - |0L><1perp|)
     p1 = (y1 - cc * y0) / math.sin(tt)
     Y20 = (p1[2] * y0[0] - y0[2] * p1[0])  # <2|Y_L|0>/i
     h20 = Y20 / math.sqrt(2)
     Ff = (y1 @ (expm(tt * h20 * S2) @ y0)) ** 2
-    print(f"  K=2 truncation, cutoff {Dd}: F(0_L prep) = {Fp:.4f}, F(flip) = {Ff:.4f}  (h2={h2:.4f}, h20/i omega={h20:.4f})")
+    print(f"  K=2 truncation, cutoff {Dd}: F(0_L prep) = {Fp:.4f}, F(1_L prep) = {F1p:.4f}, F(flip) = {Ff:.4f}  (h2={h2:.4f}, h20/i omega={h20:.4f})")
     if Dd == 90:
-        inrange(Fp, 0.725, 0.735, "squeezing terms alone 0.73 (0_L)")
+        inrange(Fp, 0.7295, 0.7305, "squeezing term alone 0.730 (0_L)")
+        inrange(F1p, 0.3305, 0.3315, "squeezing term alone 0.331 (1_L)")
+        Fp90, F1p90 = Fp, F1p
     if Dd == 160:
-        inrange(Ff, 0.25, 0.35, "squeezing terms alone 'about 0.3' (flip)")
-need("fidelity of only 0.73 for $\\ket{0_L}$ and about 0.3 for the flip", "0.73 / 0.3 text")
+        inrange(Ff, 0.27, 0.30, "squeezing term alone, flip, within 0.27--0.30 (SI table of orders)")
+need(f"reaches the target fidelity {Fp90:.3f} for $\\ket{{0_L}}$", "squeezing term alone, 0_L (SI)", SUPP)
+need(f"and {F1p90:.3f} for $\\ket{{1_L}}$", "squeezing term alone, 1_L (SI)", SUPP)
 F1 = json.loads((R / "manuscript/fig1_brachistochrone/results/fig1.json").read_text())
 print("  fig1.json order K=2 (D=40): gkp", F1["order"]["gkp"][0], "flip", F1["order"]["flip"][0])
 
-# Fig. 1 sphere weight >= 0.987
-wmin = 1.0
-for sph in ("sphere_prep", "sphere_flip"):
-    for name, pth in F1[sph]["paths"].items():
-        xyz = np.array(pth["xyz"])
-        w = np.min(np.sum(xyz ** 2, axis=1))
-        print(f"  {sph}/{name}: min weight in the 3-d subspace {w:.5f}")
-        wmin = min(wmin, w)
-print(f"  the stored sphere coordinates are normalized (min |xyz|^2 = {wmin:.5f}); the weight in the 3-d subspace is "
-      "stored as w_in_min")
-w_in = min(p["w_in_min"] for sph in ("sphere_prep", "sphere_flip") for p in F1[sph]["paths"].values())
-inrange(w_in, 0.987, 0.9875, "Fig. 1: weight >= 0.987 of every path state (stored w_in_min)")
-need("weight $\\geq0.987$ of every path state", "Fig. 1 caption weight")
+# (Fig. 1 projects every path onto one common sphere, and the final text quotes no weight)
 
 # ---------------- Fig. 2 (photon-optimal paths) ----------------
 G = F2["prep"]["gkp"]
@@ -224,7 +219,8 @@ gs = {k: v.get("saving") for k, v in gal.items()}
 print("  gallery savings:", {k: round(100 * v, 2) for k, v in gs.items() if v is not None})
 worst = max(worst, max(v for v in gs.values() if v is not None))
 inrange(worst, 0.25, 0.26, "largest saving of any preparation (below 26%)")
-need("saves at most 26\\%, for $\\ket{1_L}$ at $\\Delta=0.3$", "R2 text")
+need("stays below 26\\% for the squeezed, cat, and GKP targets we study", "below 26% (Letter)")
+need(f"The largest saving among the preparations we computed is {100 * worst:.1f}\\%, for $\\ket{{1_L}}$ at $\\Delta=0.3$", "largest saving 25.7% (SI)", SUPP)
 if SUPP is not None:
     print("  SI states the 25.7% / 26% anywhere?", "25.7" in SUPP or "26\\%" in SUPP.replace("22--26\\%", ""))
 
@@ -281,7 +277,7 @@ Jb = nC * th / OM
 print(f"\n== tilted exact flip, lambda=0.3: T = {Tt:.1f} ns ({Tt / (th / OM):.3f} T*), exposure {Jt:.1f} vs {Jb:.1f} photon ns ({100 * (Jt / Jb - 1):.1f}%)")
 inrange(Tt / (th / OM) - 1, 0.085, 0.095, "9% longer duration")
 inrange(1 - Jt / Jb, 0.225, 0.235, "23% less exposure")
-need("lower the average exposure by 23\\% at 9\\% longer duration", "tilted flip text")
+need("lower the averaged exposure by 11\\%, 19\\%, and 23\\% at 1\\%, 4\\%, and 9\\% longer duration", "tilted flips, 23% less exposure at 9% longer duration (SI)", SUPP)
 
 # ---------------- textbook logical X ----------------
 Dd = 160
@@ -333,7 +329,7 @@ six = [x for x in find(gcd) if "lind" in x[0].lower() and ("avg6" in x[0] or "si
 if six:
     inrange(six[0][1], 0.9845, 0.9855, "ECD tracking pulses act as the gate, 0.985")
     inrange(six[0][2], 0.97, 1.0, "all 20 starts (min)")
-need("act as the gate in all 20 starts (0.985, Supplementary Table~13)", "0.985 text")
+need("act as the gate (0.985, with no frame update needed)", "CD tracking pulses act as the gate, 0.985 (SI)", SUPP)
 
 # ---------------- remaining stored numbers ----------------
 F4 = json.loads((MF / "fig4/fig4_facts.json").read_text())["columns"]
@@ -345,7 +341,7 @@ inrange(F4["2"]["cs"]["F_T_mean"], 0.985, 0.995, "Fig. 4 CS F_T ~0.99 at 824")
 hl = (MF / "analytics_audit/round6/cs_proposal/cs_proposal_hamiltonian.log").read_text()
 dk = float(re.search(r"T=412 ns\s+disp_kerr : noisy ([\d.]+)", hl).group(1))
 inrange(dk, 0.9955, 0.9965, "single-branch CS with idle rotation and Kerr 0.996")
-need("or 0.996 with the idle-branch rotation", "0.996 text")
+need("the single-branch gate reaches $0.996\\pm0.002$ at 412~ns", "single-branch CS with idle-branch rotation and Kerr, 0.996 (SI)", SUPP)
 # CS exposure saving along the photon-saving paths at the four durations of Supplementary Table 12 (15--35%)
 SI_F = MF / "supplementary_information"
 for m_, fx in (("1.17", "S20_S22_flip_durations/S20_flip_m117_facts.json"), ("1.40", "S20_S22_flip_durations/S21_flip_m140_facts.json"),
@@ -354,7 +350,7 @@ for m_, fx in (("1.17", "S20_S22_flip_durations/S20_flip_m117_facts.json"), ("1.
     for ref in ("tradeoff", "photon"):
         inrange(1 - c_[ref]["cs"]["expo_L_ns"] / c_["geodesic"]["cs"]["expo_L_ns"], 0.145, 0.355,
                 f"CS 15--35% less exposure along the {ref} path, m = {m_}")
-need("CS with 15--35\\% less exposure along the photon-saving paths", "15--35% text")
+need("with 15--35\\% less exposure of the pulse", "CS 15--35% less exposure (SI)", SUPP)
 RP = json.loads((MF / "analytics_audit/round3/rates_parity.json").read_text())["groups"]
 for k in ("gkp/cs/k1", "gkp/cs/k2", "gkp/cs/k3"):
     q = RP[k]

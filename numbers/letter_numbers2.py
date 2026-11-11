@@ -98,7 +98,7 @@ d = vac - (vac @ y0) * y0 - (vac @ p1) * p1
 d /= np.linalg.norm(d)
 w = [(s @ y0) ** 2 + (s @ p1) ** 2 + (s @ d) ** 2 for s in nodes / np.linalg.norm(nodes, axis=1)[:, None]]
 print(f"info  Fig. 1(b) photon-optimal transfer: min weight in span(0_L,1_L,vacuum direction) over nodes {min(w):.5f} "
-      "(the vacuum direction, not the figure's; the printed 0.987 is checked in letter_numbers.py)")
+      "(the vacuum direction, not the figure's; the final text quotes no weight)")
 
 # R2: photon-optimal time of |1_L> at Delta 0.3 (second half of the Delta = 0.3 flip)
 A2 = json.loads((MF / "analytics_audit/photon_flip/results/audit_photon2.json").read_text())["flip_D0.3"]
