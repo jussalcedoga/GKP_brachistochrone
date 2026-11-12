@@ -235,7 +235,9 @@ def wigner_rows(fig, gs_rows):
         cb.set_ticks([-S.W_LIM, 0, S.W_LIM])
         cb.set_ticklabels([r"$-1/\pi$", r"$0$", r"$1/\pi$"])
         cb.ax.tick_params(labelsize=FS["tick"])
-        cb.set_label(r"$W(q,p)$", fontsize=FS["label"] + 3)
+        # Nov 10 (author): the label sits 8 pt from the 1/pi tick label instead of beyond the wider -1/pi (no overlap,
+        # the label spans the middle of the bar), so the figure is narrower and prints larger at the column width
+        cb.set_label(r"$W(q,p)$", fontsize=FS["label"] + 3, labelpad=-18)
 
 
 fig = plt.figure(figsize=(14.0, 15.4))
