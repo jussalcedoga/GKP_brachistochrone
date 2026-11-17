@@ -66,11 +66,12 @@ T_TRUE = {("sphere_prep", "geodesic"): _F2["prep"]["gkp"]["geodesic"]["T_ns"],
           ("sphere_flip", "tradeoff"): 1e3 * _F3["tradeoff"]["flip"]["eps"]["Yale"]["at_w_star"]["L"] / OM}
 STY = {"geodesic": dict(color=S.ROYALBLUE, lw=6.0, ls="-"), "photon": dict(color=S.CRIMSON, lw=5.4, ls=(0, (3.5, 1.4))),
        "tradeoff": dict(color=S.TRADEOFF, lw=5.0, ls=(0, (5, 1.6, 1.4, 1.6)))}
-LAB = {"geodesic": "time optimal (brachistochrone)", "photon": "photon optimal", "tradeoff": r"trade-off ($w^*$)"}
+LAB = {"geodesic": "time optimal", "photon": "photon optimal", "tradeoff": r"trade-off ($w^*$)"}
 CONTOUR = "#8E2C48"                 # photon-number contours: dark rose of the crimson (photon) family, no gray
 KET = dict(boxstyle="round,pad=0.25", fc="white", ec=S.INK, lw=1.3, alpha=0.95)
 ALPHAS = (0.15, 0.35, 0.55, 0.78, 1.0)
 NUM = ("1", "2", "3", "4", "5")
+BADGE_FS = FS["small"] - 9          # Nov 16 (author): smaller numbered badges above the Wigner panels
 
 
 def along(xyz, key, ref):
@@ -88,10 +89,12 @@ def at_times(xyz, times, key, ref):
 
 
 def badge(ax, x, y, j, transform, size):
-    a = ALPHAS[j]
-    ax.text(x, y, NUM[j], transform=transform, ha="center", va="center", fontsize=size, zorder=10,
-            color="white" if a >= 0.5 else S.INK, clip_on=False,
-            bbox=dict(boxstyle="circle,pad=0.24", fc=(*matplotlib.colors.to_rgb(S.ROYALBLUE), a), ec=S.ROYALBLUE, lw=1.8))
+    """Nov 16 (author): uniform solid badge (royal blue, white digit) drawn as a circle marker with the digit placed at
+    its centre, instead of a text bbox (which centres the circle on the text box and leaves the digit off-centre)"""
+    ax.plot([x], [y], "o", transform=transform, ms=1.75 * size, mfc=S.ROYALBLUE, mec=S.ROYALBLUE, mew=0, zorder=10,
+            clip_on=False)
+    ax.text(x, y, NUM[j], transform=transform, ha="center", va="center_baseline", fontsize=0.9 * size, zorder=11,
+            color="white", clip_on=False, fontweight="bold")
 
 
 def sphere(ax, key, labels, title, letter, offsets, num_off, alpha_view=0.30, frame=None, extra=()):
@@ -195,10 +198,11 @@ def sphere(ax, key, labels, title, letter, offsets, num_off, alpha_view=0.30, fr
     ax.set_aspect("equal")
     ax.axis("off")
     ax.apply_aspect()                                        # the square sphere box, for the title extent below
-    tt = ax.text(0.5, 1.01, title, transform=ax.transAxes, fontsize=FS["title"] - 1, ha="center", va="bottom")
-    bb = tt.get_window_extent(renderer=ax.figure.canvas.get_renderer())
-    x_left = ax.transAxes.inverted().transform((bb.x0, bb.y0))[0]
-    ax.text(x_left - 0.02, 1.0, f"({letter})", transform=ax.transAxes, fontsize=FS["panel"], ha="right", va="bottom")
+    # Nov 16 (author): panel letter at the left edge of the sphere, short title after it (durations go in the caption)
+    lt = ax.text(-0.02, 1.0, f"({letter})", transform=ax.transAxes, fontsize=FS["panel"], ha="left", va="bottom")
+    bb = lt.get_window_extent(renderer=ax.figure.canvas.get_renderer())
+    x_right = ax.transAxes.inverted().transform((bb.x1, bb.y0))[0]
+    ax.text(x_right + 0.05, 1.01, title, transform=ax.transAxes, fontsize=FS["title"] - 1, ha="left", va="bottom")
     return frame_used
 
 
@@ -212,11 +216,12 @@ def wigner_rows(fig, gs_rows):
         for k in range(5):
             ax = fig.add_subplot(sub[k])
             im = ax.imshow(Wz[name][k], origin="lower", extent=ext, cmap=S.RBCMAP, vmin=-S.W_LIM, vmax=S.W_LIM)
-            badge(ax, 0.12, 1.12, k, ax.transAxes, FS["small"])
-            ax.text(0.26, 1.12, rf"$t={fr[k] * Tn:.0f}$ ns", transform=ax.transAxes, fontsize=FS["ann"], ha="left",
-                    va="center")
-            ax.text(0.05, 0.05, rf"$\mathcal{{F}}_T={TR[name]['F_target_snap'][k]:.2f}$", transform=ax.transAxes, fontsize=FS["small"] + 2,
-                    va="bottom", ha="left", bbox=dict(fc="white", ec="none", alpha=0.85, pad=1.4))
+            badge(ax, 0.12, 1.12, k, ax.transAxes, BADGE_FS)
+            # Nov 16: baseline-anchored, shifted down by half the cap height, so the middle of the digits sits at the
+            # badge centre (va="center" centres the full line box, descender included, and leaves the text high)
+            cap = matplotlib.transforms.ScaledTranslation(0, -0.36 * FS["ann"] / 72, fig.dpi_scale_trans)
+            ax.text(0.26, 1.12, rf"$t={fr[k] * Tn:.0f}$ ns", transform=ax.transAxes + cap, fontsize=FS["ann"],
+                    ha="left", va="baseline")
             ax.set_xticks([-4, 0, 4])
             ax.set_yticks([-4, 0, 4])
             ax.tick_params(direction="out", length=8)
@@ -224,8 +229,7 @@ def wigner_rows(fig, gs_rows):
                 ax.set_xlabel(r"$q$", labelpad=2, fontsize=FS["label"] + 3)
             if k == 0:
                 ax.set_ylabel(r"$p$", labelpad=2, fontsize=FS["label"] + 3)
-                S.panel_label(ax, letter, x=-0.40, y=1.29)
-                ax.text(-0.06, 1.29, title, transform=ax.transAxes, fontsize=FS["ann"] + 5, ha="left", va="bottom")
+                S.panel_label(ax, letter, x=-0.40, y=1.29)        # Nov 16 (author): letter only, no row title
             else:
                 ax.set_yticklabels([])
             for sp in ax.spines.values():
@@ -241,20 +245,20 @@ def wigner_rows(fig, gs_rows):
 
 
 fig = plt.figure(figsize=(14.0, 15.4))
-g = fig.add_gridspec(3, 1, height_ratios=[1.78, 1, 1], hspace=0.52, top=0.905, bottom=0.04, left=0.075, right=0.955)
+g = fig.add_gridspec(3, 1, height_ratios=[1.78, 1, 1], hspace=0.44, top=0.905, bottom=0.04, left=0.075, right=0.955)
 top = g[0].subgridspec(1, 3, width_ratios=[1, 1, 0.05], wspace=0.05)
 tp = [T_TRUE[("sphere_prep", k)] for k in ("geodesic", "photon")]
 tf = [T_TRUE[("sphere_flip", k)] for k in ("geodesic", "tradeoff", "photon")]
 ax_a, ax_b = fig.add_subplot(top[0]), fig.add_subplot(top[1])
 frame_b = sphere(ax_b, "sphere_flip", (r"$|0_L\rangle$", r"$|1_L\rangle$", r"$|0\rangle$"),
-                 rf"$|0_L\rangle\to|1_L\rangle$: ${tf[0]:.0f}$, ${tf[1]:.0f}$, ${tf[2]:.0f}$ ns", "b",
-                 [((0, -68), "center"), ((0, -68), "center"), ((0, 30), "center")],
+                 "Logical Flip", "b",
+                 [((0, -68), "center"), ((0, -68), "center"), ((0, 40), "center")],   # Nov 16: |0> label raised
                  num_off=[(-4, -28), (0, -28), (0, -28), (0, -28), (4, -28)])
 # Nov 9 (author, advisor): (a) on the same sphere as (b), seen from the same direction, so both panels share the contours
 # and the positions of |0>, |0_L> and |1_L>
 sphere(ax_a, "sphere_prep", (r"$|0\rangle$", r"$|0_L\rangle$", None),
-       rf"preparation: ${tp[0]:.0f}$ vs ${tp[1]:.0f}$ ns", "a",
-       [((0, 30), "center"), ((0, -68), "center"), ((0, -68), "center")],
+       "Preparation", "a",
+       [((0, 40), "center"), ((0, -68), "center"), ((0, -68), "center")],   # Nov 16: |0> label raised
        num_off=[(-30, -8), (-30, 0), (-30, 0), (-30, 0), (-30, 0)],        # on the side away from the photon-optimal path
        frame=frame_b, extra=[(RS["states"]["1L"], r"$|1_L\rangle$")])
 sm = plt.cm.ScalarMappable(cmap=S.NCMAP, norm=plt.Normalize(0, NMAX))

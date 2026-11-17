@@ -1,9 +1,9 @@
 """Fig. 3 (one column): how a gate set is asked to follow a path, and what the time- and photon-optimal paths pass through.
-(a) the tracking policy, schematic (no data): in the plane of |0> and the path direction |chi>, x = 2 Re<0|rho|chi>,
+(b) the tracking policy, schematic (no data): in the plane of |0> and the path direction |chi>, x = 2 Re<0|rho|chi>,
     z = <0|rho|0> - <chi|rho|chi>; pure states of span{|0>, |chi>} lie on the unit circle (cos s|0> + sin s|chi> at the
     polar angle 2s), mixed or leaked states inside.  The path (royal blue) is sliced at t_k = kT/N; the pulse (crimson, as
     the CS runs of Fig. 4) must keep the closeness F_k above the threshold (shaded caps); circles filled 1 -> N.
-(b) Wigner functions of the path states: GKP preparation halfway along the time-optimal and the photon-optimal path;
+(a) Wigner functions of the path states: GKP preparation halfway along the time-optimal and the photon-optimal path;
     logical flip halfway along the time-optimal path (close to |+_L>) and at the vacuum point of the photon-optimal path
     (its photon-number minimum).  Path states from the reference paths of the tracking runs (cutoff 80; cached by the SI
     three-path script in supplementary_information/_cache), Wigner grid |q|,|p| <= 5, exact there (mfcommon.wigner_grid,
@@ -18,6 +18,9 @@ HERE = _L.vfile(__file__).parent
 sys.path.insert(0, str(HERE.parent))
 import mfcommon as M  # noqa: E402,I001
 
+# Nov 16 (author): the style of Fig. 1 -- drawn at the same 14 in width with the same 1.25x font sizes and line widths,
+# Wigner panels boxed with outward ticks and q/p labels as Fig. 1 (c, d), titles "Preparation"/"Logical Flip"
+M.FS.update({k_: round(1.25 * v_) for k_, v_ in M.FS.items()})
 S = M.setup()
 import matplotlib  # noqa: E402
 import matplotlib.pyplot as plt  # noqa: E402
@@ -27,30 +30,29 @@ import numpy as np  # noqa: E402
 
 from common import states, tracking  # noqa: E402
 
-FS = dict(M.FS, tick=19, label=20, title=19, legend=17, ann=17, small=16, panel=24)   # as Fig. 2 (one column, 7.4 in)
-plt.rcParams.update({"xtick.labelsize": FS["tick"], "ytick.labelsize": FS["tick"], "axes.labelsize": FS["label"],
-                     "axes.linewidth": 2.4, "xtick.major.size": 9, "ytick.major.size": 9, "xtick.major.width": 2.4,
-                     "ytick.major.width": 2.4})
+FS = M.FS
 F2 = json.loads((M.MS / "fig2_photon_optimal" / "results" / "fig2.json").read_text())
 TH0 = F2["prep"]["gkp"]["theta0"]
 THR = 0.97
 ALPHAS = (0.15, 0.35, 0.55, 0.78, 1.0)
 PATHC, PULSEC = S.ROYALBLUE, M.GATE_COLOR["cs"]
 CACHE = M.MF / "supplementary_information" / "_cache"
-# Nov 4 (user): less tall at full column width (as Fig. 2): (a) the four Wigner panels in one row, preparation (left
-# pair) and the flip (right pair), over (b), the path-following schematic, at equal aspect and as wide as fits
-PW = 1.55                                        # Wigner panel side in (a)
-XA, G1, G2 = 0.05, 0.05, 0.16                    # left edge of (a), gap within a pair, gap between the pairs
+# geometry in inches on the 14 in canvas of Fig. 1: (a) four Wigner panels in one row (preparation pair, flip pair) and
+# a colour bar, over (b), the path-following schematic at equal aspect
+W_IN = 14.0
+PW = 2.55                                        # Wigner panel side
+XA, G1, G2 = 1.35, 0.14, 0.55                    # left edge of the first panel, gap within a pair, gap between pairs
 XP = [XA, XA + PW + G1, XA + 2 * PW + G1 + G2, XA + 3 * PW + 2 * G1 + G2]
-X0 = 1.25                                        # left edge of (b), room for its z label and tick labels
-FB = dict(ann=22, legend=20, label=24, tick=21)  # Nov 5 (user): larger annotations, legend and axis labels in (b)
-FA = dict(pair=20, title=17, inner=15, cbtick=17, cblab=18)   # (a): pair titles, panel titles, in-panel labels, bar
-AW = 5.10                                        # (b) width, room on the right for "target |psi_f>"
+Y_W = 1.75                                       # top of the Wigner row (letter, pair title and panel titles above)
+GAP_WT = 1.55                                    # Wigner row -> schematic (tick labels and q label in between)
+X0 = 2.6                                         # left edge of (b): room for its z label and tick labels
+AW = 9.0                                         # (b) width
 AH = AW * 1.19 / 1.18                            # = y range / x range of (b), equal aspect
-Y_W, GAP_WT, BOT = 0.82, 0.62, 0.90              # top of the Wigner row (two title rows above), row -> (b), x labels
+BOT = 1.25                                       # x tick labels and x label of (b)
 Y_T = Y_W + PW + GAP_WT                          # top of the schematic
-W_IN, H_IN = 7.4, Y_T + AH + BOT
+H_IN = Y_T + AH + BOT
 fig = plt.figure(figsize=(W_IN, H_IN))
+LW_PATH, LW_PULSE, MS_PATH, MS_PULSE = 6.0, 4.6, 17, 15        # Fig. 1 path width and snapshot markers
 
 
 def ax_at(x0, y_top, w, h):
@@ -61,12 +63,16 @@ def rgba(c, a):
     return (*matplotlib.colors.to_rgb(c), a)
 
 
-# ------------------------------------------------------------------------------------------------ (a) the policy
+def letter(x_in, y_top_in, l):
+    fig.text(x_in / W_IN, 1 - y_top_in / H_IN, f"({l})", fontsize=FS["panel"], ha="left", va="top")
+
+
+# ------------------------------------------------------------------------------------------------ (b) the policy
 ax = ax_at(X0, Y_T, AW, AH)
 th = np.linspace(-0.06, np.pi / 2 + 0.06, 300)    # the unit circle of pure states of the plane, to the axis edges
-ax.plot(np.sin(th), np.cos(th), color=S.INK, lw=1.4, ls=(0, (2, 2)), zorder=1)
+ax.plot(np.sin(th), np.cos(th), color=S.INK, lw=2.2, ls=(0, (2, 2)), zorder=1)
 s = np.linspace(0, TH0, 300)
-ax.plot(np.sin(2 * s), np.cos(2 * s), color=PATHC, lw=6.0, zorder=3, solid_capstyle="round")
+ax.plot(np.sin(2 * s), np.cos(2 * s), color=PATHC, lw=LW_PATH, zorder=3, solid_capstyle="round")
 NK = 5
 sk = TH0 * np.arange(1, NK + 1) / NK
 nk = np.c_[np.sin(2 * sk), np.cos(2 * sk)]
@@ -76,50 +82,56 @@ nk = np.c_[np.sin(2 * sk), np.cos(2 * sk)]
 for a in 2 * sk[:-1]:
     phi = np.arccos(2 * THR - 1)
     arc = np.linspace(a - phi, a + phi, 60)
-    ax.add_patch(Polygon(np.c_[np.sin(arc), np.cos(arc)], closed=True, fc=PATHC, alpha=0.13, ec=PATHC, lw=1.0, zorder=1))
-u = np.linspace(0, 1, 300)                       # a schematic pulse: lags inside the circle while entangled
+    ax.add_patch(Polygon(np.c_[np.sin(arc), np.cos(arc)], closed=True, fc=PATHC, alpha=0.13, ec=PATHC, lw=1.4, zorder=1))
+u = np.linspace(0, 1, 300)                       # schematic state rho(t) under the pulse: lags inside the circle while entangled
 ang = 2 * TH0 * (u - 0.035 * np.sin(2 * np.pi * u))
 rad = 1 - 0.075 * np.sin(np.pi * u) ** 1.3 - 0.035 * np.exp(-((u - 0.6) / 0.08) ** 2)
 rx, rz = rad * np.sin(ang), rad * np.cos(ang)
-ax.plot(rx, rz, color=PULSEC, lw=3.6, zorder=4)
+ax.plot(rx, rz, color=PULSEC, lw=LW_PULSE, zorder=4)
 ik = [int(round(x * (len(u) - 1))) for x in np.arange(1, NK + 1) / NK]
 for j, i in enumerate(ik):
-    ax.plot([nk[j, 0], rx[i]], [nk[j, 1], rz[i]], color=PULSEC, lw=1.6, zorder=5)
-    ax.plot(rx[i], rz[i], "o", ms=12, mfc=rgba(PULSEC, ALPHAS[j]), mec=PULSEC, mew=1.8, zorder=6)
-    ax.plot(*nk[j], "o", ms=13, mfc=rgba(PATHC, ALPHAS[j]), mec=PATHC, mew=2.2, zorder=7)
-ax.plot(0, 1, "o", ms=12, color=S.INK, zorder=8)
-ax.text(0.0, 1.045, r"$|0\rangle$", fontsize=FB["ann"], ha="center", va="bottom")
-ax.text(nk[-1, 0] + 0.05, nk[-1, 1] + 0.02, r"target $|\psi_f\rangle$", fontsize=FB["ann"], ha="left", va="center")
+    ax.plot([nk[j, 0], rx[i]], [nk[j, 1], rz[i]], color=PULSEC, lw=2.2, zorder=5)
+    ax.plot(rx[i], rz[i], "o", ms=MS_PULSE, mfc=rgba(PULSEC, ALPHAS[j]), mec=PULSEC, mew=2.4, zorder=6)
+    ax.plot(*nk[j], "o", ms=MS_PATH, mfc=rgba(PATHC, ALPHAS[j]), mec=PATHC, mew=2.6, zorder=7)
+ax.plot(0, 1, "o", ms=14, color=S.INK, mec="white", mew=1.8, zorder=8)       # as the state dots of Fig. 1
+ax.text(0.0, 1.04, r"$|0\rangle$", fontsize=FS["label"] + 2, ha="center", va="bottom")
+# Nov 16 (author): just the target ket |psi_F>
+ax.text(nk[-1, 0] - 0.035, nk[-1, 1] - 0.025, r"$|\psi_F\rangle$", fontsize=FS["label"] + 2, ha="right",
+        va="top")                                  # below-left: to the right it would cross the frame
 J = 1
 pk = nk[J]
 tang = np.array([np.cos(2 * sk[J]), -np.sin(2 * sk[J])])
-ax.add_patch(FancyArrowPatch(pk, pk + 0.28 * tang, arrowstyle="-|>", mutation_scale=22, lw=2.8, color=PATHC, zorder=9))
-ax.text(*(pk + 0.28 * tang + np.array([0.03, 0.02])), r"$\dot p(t_k)$", fontsize=FB["ann"], color=PATHC, zorder=9,
+ax.add_patch(FancyArrowPatch(pk, pk + 0.26 * tang, arrowstyle="-|>", mutation_scale=30, lw=3.4, color=PATHC, zorder=9))
+ax.text(*(pk + 0.26 * tang + np.array([0.03, 0.02])), r"$\dot p(t_k)$", fontsize=FS["ann"], color=PATHC, zorder=9,
         ha="left", va="bottom")
-ax.annotate(r"$p(t_k)$", pk, xytext=(12, 10), textcoords="offset points", fontsize=FB["ann"], color=PATHC)
-ax.annotate(r"$\rho(t_k)$", (rx[ik[J]], rz[ik[J]]), xytext=(-72, -12), textcoords="offset points", fontsize=FB["ann"],
+ax.annotate(r"$p(t_k)$", pk, xytext=(14, 12), textcoords="offset points", fontsize=FS["ann"], color=PATHC)
+ax.annotate(r"$\rho(t_k)$", (rx[ik[J]], rz[ik[J]]), xytext=(-80, -14), textcoords="offset points", fontsize=FS["ann"],
             color=PULSEC)
 ax.set_xlim(-0.06, 1.12)
 ax.set_ylim(-0.05, 1.14)
 ax.set_aspect("equal")
 ax.set_xticks([0, 0.5, 1])
 ax.set_yticks([0, 0.5, 1])
-ax.tick_params(labelsize=FB["tick"])
+for sp in ax.spines.values():                    # boxed, outward ticks (Fig. 1)
+    sp.set_visible(True)
+ax.tick_params(direction="out", length=8)
 # the coordinates spelled out on the axes (Oct 30, author): coherence and population difference of |0> and |chi>,
 # as in Supplementary Fig. 8, so the caption need not define them
-ax.set_xlabel(r"$x=2\,\mathrm{Re}\,\langle0|\rho|\chi\rangle$", labelpad=2, fontsize=FB["label"])
-ax.set_ylabel(r"$z=\langle0|\rho|0\rangle-\langle\chi|\rho|\chi\rangle$", labelpad=4, fontsize=FB["label"])
-S.panel_label(ax, "b", x=-X0 / AW, y=0.99, size=FS["panel"])   # at the left edge of the figure, as (a)
-hk = [Line2D([], [], color=PATHC, lw=6.0),
-      Line2D([], [], ls="none", marker="o", ms=13, mfc=rgba(PATHC, 0.55), mec=PATHC, mew=2.2),
+ax.set_xlabel(r"$x=2\,\mathrm{Re}\,\langle0|\rho|\chi\rangle$", labelpad=4)
+ax.set_ylabel(r"$z=\langle0|\rho|0\rangle-\langle\chi|\rho|\chi\rangle$", labelpad=6)
+letter(0.05, Y_T - 0.25, "b")
+hk = [Line2D([], [], color=PATHC, lw=LW_PATH),
+      Line2D([], [], ls="none", marker="o", ms=MS_PATH, mfc=rgba(PATHC, 0.55), mec=PATHC, mew=2.6),
       Patch(fc=PATHC, alpha=0.13, ec=PATHC),
-      Line2D([], [], color=PULSEC, lw=3.6),
-      Line2D([], [], ls="none", marker="o", ms=12, mfc=rgba(PULSEC, 0.55), mec=PULSEC, mew=1.8)]
-ax.legend(hk, [r"path $p(t)$", r"$p(t_k)$", rf"$F_k\geq{THR}$", r"pulse", r"$\rho(t_k)$"], loc="lower left",
-          fontsize=FB["legend"], frameon=False, handlelength=1.6, labelspacing=0.6, borderaxespad=0.6, handletextpad=0.6)
-# (the lower-left interior of the quarter circle is empty: the key sits there, inside (a))
+      Line2D([], [], color=PULSEC, lw=LW_PULSE),
+      Line2D([], [], ls="none", marker="o", ms=MS_PULSE, mfc=rgba(PULSEC, 0.55), mec=PULSEC, mew=2.4)]
+ax.legend(hk, [r"path $p(t)$", r"$p(t_k)$", rf"$F_k\geq{THR}$", r"state $\rho(t)$", r"$\rho(t_k)$"], loc="lower left",
+          fontsize=FS["legend"] + 1, frameon=False, handlelength=1.8, labelspacing=0.55, borderaxespad=0.6,
+          handletextpad=0.7)
+# Nov 16 (author): the crimson curve is the state rho(t) the pulse produces, not the pulse: labelled "state rho(t)"
+# (the lower-left interior of the quarter circle is empty: the key sits there, inside (b))
 
-# ------------------------------------------------------------------------------------------------ (b) states on the paths
+# ------------------------------------------------------------------------------------------------ (a) states on the paths
 D = 80
 Wg = M.wigner_grid(D, 161)                       # |q|,|p| <= 5, exact on the shown window
 WSAVE = {}
@@ -145,46 +157,42 @@ cells = [("gkp", "geodesic", dict(f=0.5), "time optimal", PATHC),
          ("flip", "geodesic", dict(f=0.5), "time optimal", PATHC),
          ("flip", "photon", dict(at_vacuum=True), "photon optimal", S.CRIMSON)]
 info = {}
+ext = [Wg.x[0], Wg.x[-1], Wg.x[0], Wg.x[-1]]
 for c, (name, ref, kw, title, col) in enumerate(cells):
     v, f = path_state(name, ref, **kw)
     W = Wg.of_vectors(v[None])
     WSAVE[f"{name}_{ref}"] = W
     nb = float(np.real(np.vdot(v, np.arange(D) * v)))
     a_ = ax_at(XP[c], Y_W, PW, PW)
-    im = a_.imshow(W, origin="lower", extent=[Wg.x[0], Wg.x[-1], Wg.x[0], Wg.x[-1]], cmap=S.RBCMAP, vmin=-S.W_LIM,
-                   vmax=S.W_LIM)
-    a_.set_xticks([])
-    a_.set_yticks([])
+    im = a_.imshow(W, origin="lower", extent=ext, cmap=S.RBCMAP, vmin=-S.W_LIM, vmax=S.W_LIM)
+    a_.set_xticks([-4, 0, 4])                    # as Fig. 1 (c, d)
+    a_.set_yticks([-4, 0, 4])
+    a_.tick_params(direction="out", length=8)
     for sp in a_.spines.values():
         sp.set_visible(True)
-        sp.set_color(col)
-        sp.set_linewidth(3.2)
-    a_.set_title(title, fontsize=FA["title"], color=col, pad=4)
-    # in-panel labels inset from the frame and drawn under it (spines zorder 2.5), so no label box covers the outline
-    a_.text(0.93, 0.92, rf"$t={f:.2f}\,T$", transform=a_.transAxes, ha="right", va="top", fontsize=FA["inner"],
-            zorder=2, bbox=dict(fc="white", ec="none", alpha=0.85, pad=0.6))
-    if name == "flip" and ref == "geodesic":
-        lab = rf"$|\langle+_L|p\rangle|^2={abs(np.vdot(plus, v)) ** 2:.2f}$"
-    else:
-        lab = rf"$\bar n={nb:.2f}$"
-    a_.text(0.05, 0.05, lab, transform=a_.transAxes, ha="left", va="bottom", fontsize=FA["inner"], zorder=2,
-            bbox=dict(fc="white", ec="none", alpha=0.85, pad=0.6))
-    info[f"{name}_{ref}"] = dict(f=f, nbar=nb, F_plus=float(abs(np.vdot(plus, v)) ** 2))
+    a_.set_xlabel(r"$q$", labelpad=2, fontsize=FS["label"] + 3)
     if c == 0:
-        S.panel_label(a_, "a", x=-XA / PW, y=1.0 + 0.40 / PW, size=FS["panel"])   # at the left edge, as (b)
-for k_, lab in ((0, "GKP preparation"), (2, r"$|0_L\rangle\to|1_L\rangle$")):    # one title over each pair
-    fig.text((XP[k_] + PW + 0.5 * G1) / W_IN, 1 - (Y_W - 0.40) / H_IN, lab, ha="center", va="bottom", fontsize=FA["pair"])
-cax = ax_at(XP[3] + PW + 0.10, Y_W, 0.11, PW)
+        a_.set_ylabel(r"$p$", labelpad=2, fontsize=FS["label"] + 3)
+    else:
+        a_.set_yticklabels([])
+    a_.set_title(title, fontsize=FS["small"], color=col, pad=8)      # which path, in its colour
+    # Nov 16 (author): photon number in every panel (no |<+_L|p>|^2 label; F_plus is still written to fig3_facts.json),
+    # labels without a background box
+    a_.text(0.95, 0.94, rf"$t={f:.2f}\,T$", transform=a_.transAxes, ha="right", va="top", fontsize=FS["small"] - 3,
+            zorder=2)
+    a_.text(0.05, 0.05, rf"$\bar n={nb:.2f}$", transform=a_.transAxes, ha="left", va="bottom",
+            fontsize=FS["small"] - 3, zorder=2)
+    info[f"{name}_{ref}"] = dict(f=f, nbar=nb, F_plus=float(abs(np.vdot(plus, v)) ** 2))
+letter(0.05, 0.25, "a")
+for k_, lab in ((0, "Preparation"), (2, "Logical Flip")):         # one title over each pair (Fig. 1 names)
+    fig.text((XP[k_] + PW + 0.5 * G1) / W_IN, 1 - (Y_W - 0.78) / H_IN, lab, ha="center", va="bottom",
+             fontsize=FS["title"] - 1)
+cax = ax_at(XP[3] + PW + 0.18, Y_W, 0.17, PW)
 cb = fig.colorbar(im, cax=cax)
 cb.set_ticks([-S.W_LIM, 0, S.W_LIM])
 cb.set_ticklabels([r"$-1/\pi$", r"$0$", r"$1/\pi$"])
-cb.ax.tick_params(labelsize=FA["cbtick"])
-cb.set_label(r"$W(q,p)$", fontsize=FA["cblab"])
-# the label sits beside the narrow middle tick "0" instead of beyond the wide "-1/pi" (less white space to the right)
-fig.canvas.draw()
-bb0 = [t for t in cb.ax.get_yticklabels() if t.get_text() == r"$0$"][0].get_window_extent(fig.canvas.get_renderer())
-x0_ax = cb.ax.transAxes.inverted().transform((bb0.x1 + 6 * fig.dpi / 72, 0))[0]
-cb.ax.yaxis.set_label_coords(x0_ax, 0.5)
+cb.ax.tick_params(labelsize=FS["tick"])
+cb.set_label(r"$W(q,p)$", fontsize=FS["label"] + 3, labelpad=-18)   # as Fig. 1
 S.save(fig, HERE / "fig3")
 np.savez_compressed(HERE / "fig3_wigner.npz", x=Wg.x, **WSAVE)
 (HERE / "fig3_facts.json").write_text(json.dumps(info, indent=1))

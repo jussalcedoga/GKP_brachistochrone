@@ -29,8 +29,20 @@ import mfcommon as M  # noqa: E402,I001
 if "--landscape" not in sys.argv and "--wide" not in sys.argv:   # Nov 4 (user): 1.25x fonts in the one-column Letter
     # figure (drawn at 14 in, printed at 3.4 in); the two-column one (--wide) prints at half its drawn size
     M.FS.update({k_: round(1.25 * v_) for k_, v_ in M.FS.items()})
+# Nov 16 (author): the Letter two-column figure (--wide, drawn 18 in, printed at the 7.0 in page width) in the style of
+# Fig. 1 (drawn 14 in, printed 3.4 in): every font size and line width scaled so both print at the same physical size
+K_PRINT = (3.4 / 14.0) / (7.0 / 18.0) if ("--wide" in sys.argv and "--dvert" not in sys.argv) else 1.0
+if K_PRINT != 1.0:
+    M.FS.update({k_: round(1.25 * K_PRINT * v_) for k_, v_ in M.FS.items()})
 
 S = M.setup()
+if K_PRINT != 1.0:                               # Fig. 1's axes, ticks and lines at the same printed size
+    import matplotlib.pyplot as _plt
+    _plt.rcParams.update({"axes.linewidth": 2.8 * K_PRINT, "xtick.major.width": 2.8 * K_PRINT,
+                          "ytick.major.width": 2.8 * K_PRINT, "xtick.major.size": 8 * K_PRINT,
+                          "ytick.major.size": 8 * K_PRINT, "lines.linewidth": M.LW * K_PRINT,
+                          "xtick.direction": "out", "ytick.direction": "out",
+                          "xtick.major.pad": 7 * K_PRINT, "ytick.major.pad": 7 * K_PRINT})
 from common import params as P, tracking  # noqa: E402
 import compute as CP  # noqa: E402  (simulations/tracking/compute.py: transfers and reference paths)
 import matplotlib  # noqa: E402
@@ -52,7 +64,8 @@ SNAP = (0.2, 0.4, 0.6, 0.8, 1.0)
 NUM = ("1", "2", "3", "4", "5")
 ALPHAS = (0.15, 0.35, 0.55, 0.78, 1.0)          # opacity of the snapshot dots 1 -> 5 in (a-ii)
 ROMAN = ("i", "ii", "iii")
-LW, LWR = M.LW, 5.6
+LW, LWR = M.LW * K_PRINT, 6.0 * K_PRINT              # gate runs; the path (Fig. 1 path width when K_PRINT < 1)
+LW_THIN = M.LW_THIN * K_PRINT
 PATHC = S.ROYALBLUE
 WIDE = "--wide" in sys.argv                      # Letter, two columns: (a)-(c) left (a as wide as b, c), (d) right
 DV = "--dvert" in sys.argv                       # --wide: (d) with the numbered times as rows (default: as columns)
@@ -100,13 +113,21 @@ def ticks(T):
 
 
 def badge(ax, x, y, j, transform=None, size=None, pad=0.24):
-    """numbered snapshot badge j (0..4): royal-blue circle (the path colour; ink tints would read as gray) whose fill
-    opacity grows from 1 to 5, as the path dots of (a-ii) and the badges of Fig. 1"""
-    a = ALPHAS[j]
+    """numbered snapshot badge j (0..4), as in Fig. 1 (Nov 16): solid royal blue, the white digit at the centre of a
+    circle marker; Fig. 1's badge (16 pt digits, 28 pt circle at 14 in) at the same printed size (pad: unused)"""
+    bfs = 16 * K_PRINT if K_PRINT != 1.0 else (size or FS["small"]) * 0.8
     kw = dict(transform=transform) if transform is not None else {}
-    ax.text(x, y, NUM[j], ha="center", va="center", fontsize=size or FS["small"], zorder=9,
-            color="white" if a >= 0.5 else S.INK, clip_on=False,
-            bbox=dict(boxstyle=f"circle,pad={pad}", fc=(*matplotlib.colors.to_rgb(PATHC), a), ec=PATHC, lw=1.8), **kw)
+    ax.plot([x], [y], "o", ms=1.75 * bfs, mfc=PATHC, mec=PATHC, mew=0, zorder=9, clip_on=False, **kw)
+    ax.text(x, y, NUM[j], ha="center", va="center_baseline", fontsize=0.9 * bfs, zorder=10, color="white",
+            fontweight="bold", clip_on=False, **kw)
+
+
+def frame(ax):
+    """Fig. 1 panels: closed frame, outward ticks (Nov 16)"""
+    if K_PRINT != 1.0:
+        for sp in ax.spines.values():
+            sp.set_visible(True)
+        ax.tick_params(direction="out")
 
 
 def at(r, key, f):
@@ -198,6 +219,9 @@ B_TOP = 1.57 if (QUAD and not LAND) else 1.03   # (b): the band above F = 1 hold
 # snapshot dots of (a-ii): marker size, edge width (gate runs; path states) and the CS link (smaller in the landscape)
 DOT = dict(ms=14, mew=1.8, msp=13, mewp=2.6, lwl=2.0, fs=FS["small"] + 2, off=14) if not LAND else \
     dict(ms=10.5, mew=1.5, msp=10, mewp=2.2, lwl=1.6, fs=FS["small"], off=11)
+if K_PRINT != 1.0:                               # Fig. 1 marker sizes (15-17 at 14 in) at the same printed size
+    DOT = dict(ms=15 * K_PRINT, mew=2.4 * K_PRINT, msp=17 * K_PRINT, mewp=2.6 * K_PRINT, lwl=2.2 * K_PRINT,
+               fs=FS["small"] + 2, off=11)
 facts = {"target": NAME, "columns": {}}
 axc_sel, T_sel = None, None
 table = []                                       # landscape: errors at T of each column, (text, colour) per cell
@@ -212,12 +236,13 @@ for col, k in enumerate(KS):
     aw = COLW if (WIDE or not (LAND and QUAD)) else TOPH["a"] * (1.22 / 1.17)
     ax = ax_a = ax_at(x0 + 0.5 * (COLW - aw), y_a, aw, TOPH["a"])
     th = np.linspace(0, np.pi, 300)
-    ax.plot(*PT(np.sin(th), np.cos(th)), color=S.INK, lw=1.4, ls=(0, (2, 2)))     # pure states of the plane (no gray)
+    ax.plot(*PT(np.sin(th), np.cos(th)), color=S.INK, lw=2.2 * K_PRINT if K_PRINT != 1.0 else 1.4,
+            ls=(0, (2, 2)))                        # pure states of the plane (no gray)
     xp, zp = np.array(ref["x_path"]), np.array(ref["z_path"])
     ax.plot(*PT(xp, zp), color=PATHC, lw=LWR, ls=(0, (5, 2)), zorder=3)
     for g in GATES:
         for r in lists[g]:
-            ax.plot(*PT(r["xL"], r["zL"]), color=M.GATE_COLOR[g], lw=M.LW_THIN, alpha=0.20, zorder=2)
+            ax.plot(*PT(r["xL"], r["zL"]), color=M.GATE_COLOR[g], lw=LW_THIN, alpha=0.20, zorder=2)
         if rr[g] is not None:
             ax.plot(*PT(rr[g]["xL"], rr[g]["zL"]), color=M.GATE_COLOR[g], lw=LW, zorder=4 + GATES.index(g) * 0.1)
         if rr[g] is not None and M.trivial(rr[g]):  # the run shown never leaves |0>: also the mean over all starts
@@ -257,13 +282,15 @@ for col, k in enumerate(KS):
             ax.set_xticklabels(["0", "0.5", "1"])
             ax.set_yticklabels(["0", "0.5", "1"])
     ax.set_aspect("equal")
+    frame(ax)
     ALAB = FS["label"] + (3 if (WIDE and not DV) else 8 if LAND else 5)
     ax.set_xlabel(r"$z$" if SEMI else r"$x$", labelpad=0 if (WIDE and not DV) else 2, fontsize=ALAB)
     if col == 0:
         ax.set_ylabel(r"$x$" if SEMI else r"$z$", fontsize=ALAB)
     else:
         ax.set_yticklabels([])
-    ax.set_title(rf"({ROMAN[col]})\enspace$T={Tg:.0f}$ ns", fontsize=FS["title"] + (2 if not LAND else -3 if WIDE else 0),
+    ax.set_title(rf"({ROMAN[col]})\enspace$T={Tg:.0f}$ ns", fontsize=FS["title"] + (2 if not LAND else
+                 (-1 if K_PRINT != 1.0 else -3) if WIDE else 0),          # K_PRINT: Fig. 1's panel-title size
                  pad=10 if not LAND else 24)       # landscape: clear of the snapshot numbers above the arc
     if col == 0:
         panel_label(ax, "a", y=1.0 if not LAND else 1.0 + 0.33 / TOPH["a"])   # landscape: level with the titles
@@ -277,7 +304,9 @@ for col, k in enumerate(KS):
     Tmax = Tg
     ax.set_xlim(0, Tmax)
     ax.set_ylim(0.0, B_TOP)
-    ax.set_yticks([0.5, 1])                        # no 0 label: it would meet the 1.0 of (c) below
+    # no 0 label at the old font sizes (it met the 1.0 of (c) below); at Fig. 1's sizes (K_PRINT) there is room (Nov 16)
+    ax.set_yticks([0, 0.5, 1] if K_PRINT != 1.0 else [0.5, 1])
+    frame(ax)
     ax.set_xticks(ticks(Tmax))
     ax.set_xticklabels([])
     if col == 0:
@@ -323,6 +352,7 @@ for col, k in enumerate(KS):
     ax.set_xlim(0, Tmax)
     ax.set_ylim(0.0, 1.03)
     ax.set_yticks([0, 0.5, 1])
+    frame(ax)
     ax.set_xticks(ticks(Tmax))
     ax.set_xlabel(r"$t$ (ns)", fontsize=FS["label"] + 3)
     if not LAND or WIDE:                           # larger tick labels: the "0" of t clear of the "0.0" of F_T
@@ -334,7 +364,7 @@ for col, k in enumerate(KS):
     else:
         ax.set_yticklabels([])
     if LAND:                                       # errors at T: table under (d); snapshot badges between (b-ii), (c-ii)
-        if k == KW:
+        if k == KW and not WIDE:                   # Nov 16 (author): no badge row in the Letter figure
             for j, f in enumerate(SNAP):
                 badge(ax, f * Tg / ax.get_xlim()[1], 1 + 0.5 * GAPS["bc"] / TOPH["c"], j, transform=ax.transAxes,
                       pad=0.10)
@@ -349,7 +379,7 @@ for col, k in enumerate(KS):
     for axx in (ax_b, ax):
         if k == KW:
             for f in SNAP:
-                axx.axvline(f * Tg, color=S.INK, lw=1.4, ls=(0, (1, 2)), zorder=1,
+                axx.axvline(f * Tg, color=S.INK, lw=(2.2 * K_PRINT if K_PRINT != 1.0 else 1.4), ls=(0, (1, 2)), zorder=1,
                             ymax=(1.03 / B_TOP) if (axx is ax_b and QUAD) else 1)
     if k == KW:
         axc_sel, T_sel = ax, Tg
@@ -439,10 +469,10 @@ elif WIDE and not DV:
             im = ax.imshow(Ws[j], origin="lower", extent=ext, cmap=S.RBCMAP, vmin=-S.W_LIM, vmax=S.W_LIM)
             ax.set_xticks([])
             ax.set_yticks([])
-            for sp in ax.spines.values():
+            for sp in ax.spines.values():           # gate colour coding (Nov 16, author: kept)
                 sp.set_visible(True)
                 sp.set_color(c)
-                sp.set_linewidth(3.0)
+                sp.set_linewidth(3.4 * K_PRINT if K_PRINT != 1.0 else 3.0)
             if Fs is not None:                     # closeness of the run to the path state at t_j
                 ax.text(0.05, 0.05, rf"$F={Fs[j]:.2f}$", transform=ax.transAxes, fontsize=FS["small"] - 1, zorder=2,
                         bbox=dict(fc="white", ec="none", alpha=0.85, pad=0.8))
@@ -522,7 +552,7 @@ if LAND:
 hs = [Line2D([], [], color=PATHC, lw=LWR, ls=(0, (5, 2)))] + [Line2D([], [], color=M.GATE_COLOR[g], lw=LW) for g in GATES]
 labs = ["brachistochrone"] + [M.GATE_NAME[g] for g in GATES]
 if WIDE and not DV:                              # legend with the full names under the grid and its colour bar
-    fig.legend(hs, labs, loc="upper center", ncol=2, fontsize=FS["legend"] - 3,
+    fig.legend(hs, labs, loc="upper center", ncol=2, fontsize=FS["legend"] + (1 if K_PRINT != 1.0 else -3),
                bbox_to_anchor=((XG + 0.5 * (GW + CBV_GAP + CBV_W + CBV_LAB)) / W_IN, 1 - (y_a + GRID_H + 0.34) / H_IN),
                handlelength=1.8, labelspacing=0.25, columnspacing=1.4, borderaxespad=0.0, borderpad=0.0, frameon=False)
 else:
