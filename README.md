@@ -5,7 +5,7 @@ Code and stored results for the paper
 > A. Curtis, J. S. Salcedo-Gallo, S. Leonov, K. Limanta, P. Chin, S. Bedkihal, and M. Fitzpatrick,
 > *Time- and Photon-Optimal Paths for the Preparation and Logical Flip of Gottesman–Kitaev–Preskill States*.
 
-- **Paper (Letter):** journal link to be added (`https://doi.org/XX.XXXX/XXXXX`), preprint `https://arxiv.org/abs/XXXX.XXXXX`
+- **Paper (Letter):** journal link to be added (`https://doi.org/XX.XXXX/XXXXX`), preprint `[https://arxiv.org/abs/2611.15018](https://arxiv.org/abs/2611.15018)`
 - **Supplementary Information:** link to be added (published with the Letter; also in the arXiv record)
 - **Archived copy of this repository and the large result files:** Zenodo, `https://doi.org/10.5281/zenodo.XXXXXXX` (see [`data/README.md`](data/README.md))
 
